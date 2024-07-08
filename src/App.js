@@ -15,8 +15,8 @@ function App() {
         <Header/>
         <Routes>
           <Route exact path="/" element={<Home />} />
-          {/* <Route path="/services" element={<Services />} />
-          <Route path="/gallery" element={<GalleryPage />} /> */}
+          <Route path="/services" element={<Services />} />
+          <Route path="/gallery" element={<GalleryPage />} />
         </Routes>
         <Footer/>
       </div>

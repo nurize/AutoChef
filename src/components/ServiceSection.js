@@ -2,7 +2,7 @@ const ServicesSection = ({ title, description, points, image, icon, alignRight }
   const containerAlignmentClass = alignRight ? 'ml-auto lg:ml-auto' : 'mr-auto lg:mr-auto';
 
   return (
-    <section className="relative flex items-center justify-center bg-black text-white bg-cover bg-center p-3 md:p-10"
+    <section className="relative flex items-center  justify-center bg-black text-white bg-cover bg-center p-3 md:p-10"
     style={{ 
       backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.5)), url(${image})`,
       fontFamily: 'Inter'

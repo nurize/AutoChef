@@ -7,11 +7,12 @@ import Contact from '../components/Contact';
 import EmailSignUp from '../components/EmailSignUp';
 import heroSections from '../data/heroSections';
 
+
 const Home = () => {
   const heroData = heroSections.find(section => section.page === 'home');
 
   return ( 
-    <div className="Home">
+    <div className="Home font-inter">
       <HeroSection 
         backgroundImage={heroData.backgroundImage}
         title={heroData.title}
