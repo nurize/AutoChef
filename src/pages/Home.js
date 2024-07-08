@@ -21,7 +21,7 @@ const Home = () => {
       <WhyChooseUsSection />
       <ContactFormSection />
       {/* <GallerySection /> */}
-      {/* <Contact/> */}
+      <Contact/>
       {/* <EmailSignUp/> */}
     </div>
   );
