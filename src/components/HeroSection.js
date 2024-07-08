@@ -1,5 +1,4 @@
-import React from 'react';
-import backgroundImage from '../assets/Hero-bg-Image.png'; // Adjust the path as necessary
+import backgroundImage from '../assets/Hero-bg-Image.png';
 
 
 const HeroSection = ({  title, description, description2 }) => {
