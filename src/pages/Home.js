@@ -19,7 +19,7 @@ const Home = () => {
       />
       <ServicesHomeSection />
       <WhyChooseUsSection />
-      {/* <ContactFormSection /> */}
+      <ContactFormSection />
       {/* <GallerySection /> */}
       {/* <Contact/> */}
       {/* <EmailSignUp/> */}
