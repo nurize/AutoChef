@@ -18,11 +18,11 @@ const Home = () => {
         description={heroData.description}
       />
       <ServicesHomeSection />
-      {/* <WhyChooseUsSection />
-      <ContactFormSection /> */}
+      <WhyChooseUsSection />
+      {/* <ContactFormSection /> */}
       {/* <GallerySection /> */}
-      <Contact/>
-      <EmailSignUp/>
+      {/* <Contact/> */}
+      {/* <EmailSignUp/> */}
     </div>
   );
 }
