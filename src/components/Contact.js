@@ -1,6 +1,29 @@
-import engineImage from '../assets/engine-block.png'; 
+import React, { useState } from 'react';
+import Modal from 'react-modal';
+import engineImage from '../assets/engine-block.png';
+
+Modal.setAppElement('#root'); // Make sure to set the app element
 
 const Contact = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleSelectOption = (option) => {
+    handleCloseModal();
+    if (option === 'email') {
+      window.location.href = 'mailto:autochef83@gmail.com';
+    } else if (option === 'phone') {
+      window.location.href = 'tel:+1234567890'; // Replace with your phone number
+    }
+  };
+
   return (
     <div className="relative flex flex-col lg:flex-row justify-between my-24 px-4">
       <div className="lg:absolute top-0 w-full lg:w-3/4 bg-red-600 text-white p-8 md:p-16 z-0 lg:ml-8">
@@ -17,21 +40,20 @@ const Contact = () => {
             <div className="mb-6">
               <h3 className="text-lg md:text-xl font-semibold mb-2">Our Location</h3>
               <div className="flex items-center mb-2">
-                
                 <div className="bg-white rounded-full p-3 mr-3 min-w-fit">
-                  <a href="#"><img src={require('../assets/contact-location.png')} alt="Location" className="w-5 h-5" /></a>
+                  <a href="https://maps.app.goo.gl/Kdr4PQ27nfd6ukvJ7" target='_blank' rel='noopener noreferrer'><img src={require('../assets/contact-location.png')} alt="Location" className="w-5 h-5" /></a>
                 </div>
                 <p>1247/Plot No. 39, 15th Phase, Colony, Kukatpally, Hyderabad</p>
               </div>
               <div className="flex items-center">
                 <div className="bg-white rounded-full p-3 mr-3">
-                  <a href="#"><img src={require('../assets/contact-email.png')} alt="Location" className="w-5 h-5" /></a>
+                  <a href="mailto:autochef83@gmail.com"><img src={require('../assets/contact-email.png')} alt="Email" className="w-5 h-5" /></a>
                 </div>
                 <p>autochef83@gmail.com</p>
               </div>
             </div>
           </div>
-          <button className="bg-white text-red-600 py-2 px-4 w-full lg:w-1/2 font-semibold hover:bg-gray-100 mt-4 md:mt-8">
+          <button onClick={handleOpenModal} className="bg-white text-red-600 py-2 px-4 w-full lg:w-1/2 font-semibold hover:bg-gray-100 mt-4 md:mt-8">
             Contact
           </button>
         </div>
@@ -43,6 +65,28 @@ const Contact = () => {
           className="w-full lg:w-[600px] h-[300px] lg:h-[500px] object-cover rounded-lg border-2" 
         />
       </div>
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={handleCloseModal}
+        contentLabel="Contact Options"
+        className="bg-white p-10 md:p-16 rounded-lg shadow-lg max-w-sm mx-auto mt-20"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-20 flex justify-center items-center"
+      >
+        <h2 className="text-2xl font-semibold mb-4">Contact Us</h2>
+        <p className="mb-5">Please select an option to contact us:</p>
+        <button
+          onClick={() => handleSelectOption('email')}
+          className="text-red-600 border border-red-300 hover:bg-red-600 hover:text-white py-2 px-4 rounded-lg mb-6 w-full"
+        >
+          Email
+        </button>
+        <button
+          onClick={() => handleSelectOption('phone')}
+          className="text-red-600 border border-red-300 hover:bg-red-600 hover:text-white py-2 px-4 rounded-lg mb-6 w-full"
+        >
+          Phone
+        </button>
+      </Modal>
     </div>
   );
 };
