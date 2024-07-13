@@ -39,7 +39,6 @@ code {
   transform-origin: bottom left;
 }
 
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
