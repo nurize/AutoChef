@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import serviceData from '../data/serviceData';
 
 const Footer = () => {
   return (
@@ -50,10 +51,9 @@ const Footer = () => {
             <div className="mb-8 md:mb-0">
               <h3 className="font-bold mb-4">Our Services</h3>
               <ul>
-                <li>Performance Upgrade</li>
-                <li>Transmission Services</li>
-                <li>Break Repair & Service</li>
-                <li>Engine Service & Repair</li>
+                {serviceData.map((service) => (
+                  <li><Link to={`/services#${service.path}`} key={service.title}>{service.title}</Link></li>
+                ) )}
               </ul>
             </div>
             <div>
