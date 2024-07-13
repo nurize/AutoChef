@@ -6,13 +6,14 @@ import GallerySection from '../components/GallerySection';
 import Contact from '../components/Contact';
 import EmailSignUp from '../components/EmailSignUp';
 import heroSections from '../data/heroSections';
+import ReviewSection from '../components/ReviewSection';
 
 
 const Home = () => {
   const heroData = heroSections.find(section => section.page === 'home');
 
   return ( 
-    <div className="Home font-inter">
+    <div className="font-inter">
       <HeroSection 
         backgroundImage={heroData.backgroundImage}
         title={heroData.title}
@@ -21,7 +22,8 @@ const Home = () => {
       <ServicesHomeSection />
       <WhyChooseUsSection />
       <ContactFormSection />
-      {/* <GallerySection /> */}
+      <GallerySection />
+      <ReviewSection/>
       <Contact/>
       <EmailSignUp/>
     </div>
