@@ -20,7 +20,7 @@ const SwiperSlider = () => {
           delay: 3000,
           disableOnInteraction: false,
         }}
-        lazy={true}
+        lazy="true"
         pagination={{
           clickable: true,
         }}
