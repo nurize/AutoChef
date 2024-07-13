@@ -1,29 +1,28 @@
-const ServicesSection = ({ title, description, points, image, icon, alignRight }) => {
+// src/components/ServicesSection.js
+import React from 'react';
+import { useService } from '../context/ServiceContext';
+import Button from './Button';
+import { useNavigate } from 'react-router-dom';
+
+const ServicesSection = ({ id, title, description, points, image, icon, alignRight }) => {
+  const { setSelectedService } = useService();
+  const navigate = useNavigate();
   const containerAlignmentClass = alignRight ? 'ml-auto lg:ml-auto' : 'mr-auto lg:mr-auto';
 
+  const handleBookService = () => {
+    setSelectedService(title);
+    navigate('/booking');
+  };
+
   return (
-    <section className="relative flex items-center  justify-center bg-black text-white bg-cover bg-center p-3 md:p-10"
-    style={{ 
-      backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.5)), url(${image})`,
-      fontFamily: 'Inter'
-    }}
-    >
-      {/* <img 
-        src={image} 
-        alt={title} 
-        className="absolute inset-0 w-full h-full object-cover z-0 opacity-70" 
-        style={{
-          backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url(${image})`
-        }} 
-      />
-      <div 
-      className="bg-cover bg-center flex flex-col items-center w-11/12 md:w-4/5 mx-auto py-24 justify-center bg-gray-700 text-white" 
+    <section 
+      id={id}
+      className="relative flex items-center justify-center bg-black text-white bg-cover bg-center p-3 md:p-10"
       style={{ 
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${image})`,
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.5)), url(${image})`,
         fontFamily: 'Inter'
       }}
-      >
-     </div> */}
+    >
       <div className={`relative z-10 p-8 sm:p-12 md:p-16 lg:w-2/3 xl:w-7/12 rounded-lg ${containerAlignmentClass}`}>
         <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl pb-4 md:pb-6 lg:pb-8 font-bold mb-4 flex italic items-center">
           {title} 
@@ -36,9 +35,12 @@ const ServicesSection = ({ title, description, points, image, icon, alignRight }
             <li key={index} className='mb-2 md:mb-4'><span className="font-bold">{point.title}:</span> {point.text}</li>
           ))}
         </ul>
-        <button className="bg-white hover:bg-red-700 text-red-700 hover:text-white text-base py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-          Book A Service
-        </button>
+        
+        <Button 
+          styleProp={"bg-white hover:bg-red-700 text-red-700 hover:text-white text-base py-2 px-4 rounded focus:outline-none focus:shadow-outline"} 
+          textProp={"Book A Service"}
+          onClick={handleBookService}
+        />
       </div>
     </section>
   );
