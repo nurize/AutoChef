@@ -1,7 +1,7 @@
 // src/components/ServicesSection.js
 import React from 'react';
 import { useService } from '../context/ServiceContext';
-import Button from './Button';
+import Button from './BookButton';
 import { useNavigate } from 'react-router-dom';
 
 const ServicesSection = ({ id, title, description, points, image, icon, alignRight }) => {

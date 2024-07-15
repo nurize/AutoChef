@@ -7,20 +7,20 @@ const heroSections = [
   },
   {
     page: 'about',
-    backgroundImage: 'path/to/about-bg.png',
+    backgroundImage: require('../assets/Hero-bg-Image.png'),
     title: 'Learn More About Us',
     description: 'We are dedicated to providing the best service and value for our customers.',
   },
   {
     page: 'services',
-    backgroundImage: 'path/to/services-bg.png',
+    backgroundImage: require('../assets/Hero-bg-Image.png'),
     title: 'Our Services',
     description: 'At AutoChef, we are committed to providing exceptional service and high-quality workmanship. Contact us today to schedule an appointment and experience the AutoChef difference.',
     description2: 'At AutoChef, we provide a comprehensive range of auto repair and maintenance services to keep your vehicle running smoothly and looking its best. Explore our specialized services below:',
   },
   {
     page: 'gallery',
-    backgroundImage: 'path/to/gallery-bg.png',
+    backgroundImage: require('../assets/Hero-bg-Image.png'),
     title: 'Gallery',
     description: 'Take a look at our recent projects and achievements.',
   },

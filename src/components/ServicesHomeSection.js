@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import serviceData from '../data/serviceData';
-import Button from './Button';
+import Button from './BookButton';
 
 const ServicesHomeSection = () => {
   return (
