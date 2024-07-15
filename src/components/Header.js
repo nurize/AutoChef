@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import LoginSignupModal from './LoginSignupModal';
+import Button from './BookButton';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,7 +11,7 @@ const Header = () => {
   const handleLoginClose = () => setIsLoginOpen(false);
 
   return (
-    <header className="bg-black text-white p-4 sticky top-0 z-40">
+    <header className="bg-black text-white p-5 sticky top-0 z-30">
       <nav className="container mx-auto flex justify-between items-center">
         <div className="text-2xl font-bold">
           <NavLink to='/'>Auto<span className='text-red-700'>Chef</span></NavLink>
@@ -49,7 +50,7 @@ const Header = () => {
           <li>
             <NavLink 
               to="/" 
-              className={({ isActive }) => `nav-link block md:inline py-2 md:py-0 ${isActive ? 'text-red-700' : ''}`}
+              className={({ isActive }) => `nav-link block md:inline py-2 md:py-0 ${isActive ? 'text-red-700 font-bold' : ''}`}
             >
               Home
             </NavLink>
@@ -57,7 +58,7 @@ const Header = () => {
           <li>
             <NavLink 
               to="/services" 
-              className={({ isActive }) => `nav-link block md:inline py-2 md:py-0 ${isActive ? 'text-red-700' : ''}`}
+              className={({ isActive }) => `nav-link block md:inline py-2 md:py-0 ${isActive ? 'text-red-700 font-bold' : ''}`}
             >
               Services
             </NavLink>
@@ -65,7 +66,7 @@ const Header = () => {
           <li>
             <NavLink 
               to="/about" 
-              className={({ isActive }) => `nav-link block md:inline py-2 md:py-0 ${isActive ? 'text-red-700' : ''}`}
+              className={({ isActive }) => `nav-link block md:inline py-2 md:py-0 ${isActive ? 'text-red-700 font-bold' : ''}`}
             >
               About
             </NavLink>
@@ -73,7 +74,7 @@ const Header = () => {
           <li>
             <NavLink 
               to="/gallery" 
-              className={({ isActive }) => `nav-link block md:inline py-2 md:py-0 ${isActive ? 'text-red-700' : ''}`}
+              className={({ isActive }) => `nav-link block md:inline py-2 md:py-0 ${isActive ? 'text-red-700 font-bold' : ''}`}
             >
               Gallery
             </NavLink>
@@ -81,26 +82,16 @@ const Header = () => {
           <li>
             <NavLink 
               to="/contact" 
-              className={({ isActive }) => `nav-link block md:inline py-2 md:py-0 ${isActive ? 'text-red-700' : ''}`}
+              className={({ isActive }) => `nav-link block md:inline py-2 md:py-0 ${isActive ? 'text-red-700 font-bold' : ''}`}
             >
               Contact Us
             </NavLink>
           </li>
         </ul>
-        <button 
-          className="hidden md:block bg-red-600 px-6 py-3 text-lg font-semibold rounded hover:bg-red-700 transition duration-300"
-          onClick={handleLoginOpen}
-        >
-          Book Now
-        </button>
+        <Button styleProp={"hidden md:block bg-red-600 px-6 py-3 text-lg font-semibold rounded hover:bg-red-700 transition duration-300"} textProp={"Book Now"}/>
       </nav>
       {isOpen && (
-        <button 
-          className="block md:hidden bg-red-600 w-full px-6 py-3 mt-4 text-lg font-semibold rounded hover:bg-red-700 transition duration-300"
-          onClick={handleLoginOpen}
-        >
-          Book Now
-        </button>
+        <Button styleProp={"block md:hidden bg-red-600 w-full px-6 py-3 mt-4 text-lg font-semibold rounded hover:bg-red-700 transition duration-300"} textProp={"Book Now"}/>
       )}
       <LoginSignupModal isOpen={isLoginOpen} onClose={handleLoginClose} />
     </header>
