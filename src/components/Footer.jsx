@@ -52,7 +52,7 @@ const Footer = () => {
               <h3 className="font-bold mb-4">Our Services</h3>
               <ul>
                 {serviceData.map((service) => (
-                  <li><Link to={`/services#${service.path}`} key={service.title}>{service.title}</Link></li>
+                  <li key={service.title}><Link to={`/services#${service.path}`}>{service.title}</Link></li>
                 ) )}
               </ul>
             </div>
