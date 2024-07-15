@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Modal from 'react-modal';
 import engineImage from '../assets/engine-block.png';
 
-Modal.setAppElement('#root'); // Make sure to set the app element
+Modal.setAppElement('#root'); 
 
 const Contact = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,7 +20,7 @@ const Contact = () => {
     if (option === 'email') {
       window.location.href = 'mailto:autochef83@gmail.com';
     } else if (option === 'phone') {
-      window.location.href = 'tel:+1234567890'; // Replace with your phone number
+      window.location.href = 'tel:+1234567890'; 
     }
   };
 
@@ -53,7 +53,7 @@ const Contact = () => {
               </div>
             </div>
           </div>
-          <button onClick={handleOpenModal} className="bg-white text-red-600 py-2 px-4 w-full lg:w-1/2 font-semibold hover:bg-gray-100 mt-4 md:mt-8">
+          <button onClick={handleOpenModal} className="bg-white text-red-600 py-2 px-4 w-full lg:w-1/2 font-semibold rounded-lg hover:bg-gray-100 mt-4 md:mt-8">
             Contact
           </button>
         </div>
@@ -62,7 +62,7 @@ const Contact = () => {
         <img 
           src={engineImage} 
           alt="Engine" 
-          className="w-full lg:w-[600px] h-[300px] lg:h-[500px] object-cover rounded-lg border-2" 
+          className="w-full lg:w-[600px] h-[300px] lg:h-[490px] object-cover rounded-lg" 
         />
       </div>
       <Modal
