@@ -1,107 +1,145 @@
-// src/components/BookingForm.js
-import React from 'react';
-import { useService } from '../context/ServiceContext';
+import React, { useState } from 'react';
+import Modal from 'react-modal';
 
-const BookingForm = () => {
-  const { selectedService } = useService();
+const BookingForm = ({ isSignedIn }) => {
+  const [modalState, setModalState] = useState({ isOpen: false, isBookingConfirmed: false });
+  const [formData, setFormData] = useState({
+    fullName: '',
+    contactNumber: '',
+    service: '',
+    serviceInfo: '',
+    confirmation: ''
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value
+    }));
+  };
+
+  const handleOpenModal = (e) => {
+    e.preventDefault();
+    setModalState({ ...modalState, isOpen: true });
+  };
+
+  const handleConfirmBooking = () => {
+    setModalState({ isOpen: false, isBookingConfirmed: true });
+  };
+
+  const handleCloseModal = () => {
+    setModalState({ ...modalState, isOpen: false });
+  };
+
+  const handleCloseConfirmationModal = () => {
+    setModalState({ ...modalState, isBookingConfirmed: false });
+  };
 
   return (
     <div className="max-w-xl mx-auto p-4">
       <h1 className="text-3xl font-bold text-center mb-4">AutoService</h1>
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex-1 text-center">
-          <div className="w-8 h-8 bg-green-500 text-white rounded-full inline-flex items-center justify-center">1</div>
-          <p className="mt-2">Search</p>
-        </div>
-        <div className="flex-1 text-center">
-          <div className="w-8 h-8 bg-green-500 text-white rounded-full inline-flex items-center justify-center">2</div>
-          <p className="mt-2">Select Date & Time</p>
-        </div>
-        <div className="flex-1 text-center">
-          <div className="w-8 h-8 bg-green-500 text-white rounded-full inline-flex items-center justify-center">3</div>
-          <p className="mt-2">Choose</p>
-        </div>
-        <div className="flex-1 text-center">
-          <div className="w-8 h-8 bg-green-500 text-white rounded-full inline-flex items-center justify-center">4</div>
-          <p className="mt-2">Enter Contact</p>
-        </div>
-        <div className="flex-1 text-center">
-          <div className="w-8 h-8 bg-gray-300 text-white rounded-full inline-flex items-center justify-center">5</div>
-          <p className="mt-2">Confirm</p>
-        </div>
-        <div className="flex-1 text-center">
-          <div className="w-8 h-8 bg-gray-300 text-white rounded-full inline-flex items-center justify-center">6</div>
-          <p className="mt-2">Make</p>
-        </div>
-      </div>
-
-      <h2 className="text-2xl font-semibold mb-4">Respray Service</h2>
       <form className="space-y-4">
-        <div className="flex space-x-4">
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700">Full Name</label>
-            <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm" placeholder="Your Name"/>
-          </div>
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700">Contact Number</label>
-            <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm" placeholder="Contact Number"/>
-          </div>
+        <div className="flex-1">
+          <label className="block text-sm font-medium text-gray-700">Full Name</label>
+          <input 
+            type="text" 
+            name="fullName"
+            value={formData.fullName}
+            onChange={handleInputChange}
+            className="mt-1 block w-full border border-gray-300 p-3 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm" 
+            placeholder="Your Name"
+          />
         </div>
-        <div className="flex space-x-4">
-          <div className="flex-1 mb-4 md:mb-0">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="service">
-              Service
-            </label>
-            <select
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="service"
-              value={selectedService || '--Select Service--'}
-            >
-              <option>--Select Service--</option>
-              <option>Automobile resprays</option>
-              <option>Auto Electrical</option>
-              <option>Car Detailing</option>
-              <option>Paint Correction</option>
-              <option>Body Works</option>
-              <option>Auto Mechanic</option>
-            </select>
-          </div>
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700">Preferred Date & Time</label>
-            <input type="date" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"/>
-          </div>
+        <div className="flex-1">
+          <label className="block text-sm font-medium text-gray-700">Contact Number</label>
+          <input 
+            type="text" 
+            name="contactNumber"
+            value={formData.contactNumber}
+            onChange={handleInputChange}
+            className="mt-1 block w-full border border-gray-300 p-3 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm" 
+            placeholder="Contact Number"
+          />
         </div>
-        <div className="flex space-x-4">
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700">Preferred Service Date</label>
-            <input type="date" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"/>
-          </div>
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700">Preferred Service Time</label>
-            <select className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm">
-              <option>Morning</option>
-              <option>Afternoon</option>
-              <option>Evening</option>
-            </select>
-          </div>
+        <div className="flex-1">
+          <label className="block text-gray-700 text-sm font-medium mb-2" htmlFor="service">
+            Service
+          </label>
+          <select
+            name="service"
+            value={formData.service}
+            onChange={handleInputChange}
+            className="appearance-none border border-gray-300 rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="service"
+          >
+            <option value="">--Select Service--</option>
+            <option value="Automobile resprays">Automobile resprays</option>
+            <option value="Auto Electrical">Auto Electrical</option>
+            <option value="Car Detailing">Car Detailing</option>
+            <option value="Paint Correction">Paint Correction</option>
+            <option value="Body Works">Body Works</option>
+            <option value="Auto Mechanic">Auto Mechanic</option>
+          </select>
         </div>
-        <div className="mt-4">
-          <label className="block text-sm font-medium text-gray-700">Receive Booking Confirmation</label>
-          <div className="mt-2 space-x-4">
-            <label className="inline-flex items-center">
-              <input type="radio" className="form-radio" name="confirmation" value="yes" />
-              <span className="ml-2">Yes, add to calendar</span>
-            </label>
-            <label className="inline-flex items-center">
-              <input type="radio" className="form-radio" name="confirmation" value="no" />
-              <span className="ml-2">No, thanks</span>
-            </label>
-          </div>
+        <div className="flex-1">
+          <label className="block text-sm font-medium text-gray-700 mb-2">How can we help?</label>
+          <textarea
+              className="appearance-none border rounded-lg w-full p-3 border-gray-300 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="message"
+              placeholder="Tell us a little about the request..."
+              rows="4"
+            ></textarea>
         </div>
-        <button className='hover:bg-red-600 text-red-600 hover:text-white border border-red-300 px-5 py-2 rounded-lg'>confirm Booking</button>
+        
+        <button 
+          onClick={handleOpenModal} 
+          className='hover:bg-red-600 text-red-700 bg-white hover:text-white border border-red-300 px-5 py-2 rounded-lg'>
+          Confirm Booking
+        </button>
       </form>
+
+      <Modal
+        isOpen={modalState.isOpen}
+        onRequestClose={handleCloseModal}
+        contentLabel="Confirm Booking"
+        className="bg-white p-8 rounded-lg shadow-lg max-w-md mx-auto mt-20"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-20 flex justify-center items-center"
+      >
+        <h2 className="text-2xl font-semibold mb-4">Confirm Your Booking</h2>
+        <p className="mb-5">Are you sure you want to confirm the booking?</p>
+        <button
+          onClick={handleConfirmBooking}
+          className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 mr-4"
+        >
+          Yes, Confirm
+        </button>
+        <button
+          onClick={handleCloseModal}
+          className="bg-gray-300 py-2 px-4 rounded-lg hover:bg-gray-400"
+        >
+          Cancel
+        </button>
+      </Modal>
+
+      <Modal
+        isOpen={modalState.isBookingConfirmed}
+        onRequestClose={handleCloseConfirmationModal}
+        contentLabel="Booking Confirmed"
+        className="bg-white p-8 rounded-lg shadow-lg max-w-md mx-auto mt-20"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-20 flex justify-center items-center"
+      >
+        <h2 className="text-2xl font-semibold mb-4">Booking Confirmed</h2>
+        <p className="mb-5">Your booking has been successfully confirmed. Thank you!</p>
+        <button
+          onClick={handleCloseConfirmationModal}
+          className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"
+        >
+          Close
+        </button>
+      </Modal>
     </div>
   );
-}
+};
 
 export default BookingForm;
