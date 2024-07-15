@@ -3,10 +3,10 @@ import Slider from 'react-slick';
 import gallery from '../data/gallery';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import ImageModal from './ImageModal';
 
 const FeaturedGallery = () => {
   const [selectedIndex, setSelectedIndex] = useState(null);
-
   const featuredGallery = gallery.slice(0, 6);
 
   const settings = {
@@ -20,9 +20,7 @@ const FeaturedGallery = () => {
     centerMode: true,
     centerPadding: '0',
     arrows: false,
-    customPaging: (i) => (
-      <div className="w-full h-[6px] bg-white m-7 "></div>
-    ),
+    customPaging: () => <div className="w-full h-[6px] bg-white m-7 "></div>,
     dotsClass: 'slick-dots custom-dots',
     responsive: [
       {
@@ -57,11 +55,18 @@ const FeaturedGallery = () => {
         },
       },
     ],
-    afterChange: (index) => {
-      if (selectedIndex === null) {
-        setSelectedIndex(null);
-      }
-    },
+  };
+
+  const handleCloseModal = () => {
+    setSelectedIndex(null);
+  };
+
+  const handlePrevious = () => {
+    setSelectedIndex((selectedIndex - 1 + gallery.length) % gallery.length);
+  };
+
+  const handleNext = () => {
+    setSelectedIndex((selectedIndex + 1) % gallery.length);
   };
 
   return (
@@ -75,40 +80,20 @@ const FeaturedGallery = () => {
                 alt={`Gallery image ${index + 1}`}
                 className="w-full h-64 sm:h-80 2xl:h-96 object-cover transition-transform duration-500 transform hover:scale-110 cursor-pointer"
                 onClick={() => setSelectedIndex(index)}
+                loading="lazy"
               />
             </div>
           </div>
         ))}
       </Slider>
 
-      {selectedIndex !== null && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
-          <button
-            onClick={() => setSelectedIndex((selectedIndex - 1 + gallery.length) % gallery.length)}
-            className="absolute left-5 text-white text-2xl p-5 z-50"
-          >
-            &#8249;
-          </button>
-          <img
-            src={gallery[selectedIndex]}
-            alt={`Selected image ${selectedIndex + 1}`}
-            className="max-w-full max-h-full object-contain transition-transform duration-500 transform p-10"
-            onClick={() => setSelectedIndex(null)}
-          />
-          <button
-            onClick={() => setSelectedIndex((selectedIndex + 1) % gallery.length)}
-            className="absolute right-5 text-white text-2xl p-5 z-50"
-          >
-            &#8250;
-          </button>
-          <button
-            className="absolute top-5 right-5 text-white text-2xl z-50"
-            onClick={() => setSelectedIndex(null)}
-          >
-            &times;
-          </button>
-        </div>
-      )}
+      <ImageModal 
+        isOpen={selectedIndex !== null} 
+        image={gallery[selectedIndex]} 
+        onClose={handleCloseModal} 
+        onPrevious={handlePrevious} 
+        onNext={handleNext} 
+      />
     </div>
   );
 };

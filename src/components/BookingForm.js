@@ -87,6 +87,7 @@ const BookingForm = ({ isSignedIn }) => {
           <textarea
               className="appearance-none border rounded-lg w-full p-3 border-gray-300 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="message"
+              value={formData.serviceInfo}
               placeholder="Tell us a little about the request..."
               rows="4"
             ></textarea>
