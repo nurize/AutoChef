@@ -20,7 +20,7 @@ const Footer = () => {
           </div>
           <div className="flex items-center space-x-4 my-4 md:mb-0">
             <div className="bg-red-500 rounded-full p-2">
-              <a href="tel:+1234567890"><img src={require('../assets/phone.png')} alt="Phone" className="w-5 h-5 md:w-9 md:h-9" /></a>
+              <a href="tel:+233200666211"><img src={require('../assets/phone.png')} alt="Phone" className="w-5 h-5 md:w-9 md:h-9" /></a>
             </div>
             <span className='hidden md:block'>0200666211</span>
           </div>
