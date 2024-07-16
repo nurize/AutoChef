@@ -80,7 +80,7 @@ const ImageModal = ({ isOpen, image, onClose, onPrevious, onNext }) => {
         <img 
           ref={imageRef}
           src={image} 
-          alt="Selected image" 
+          alt="Selected item" 
           className={`max-w-full max-h-full object-contain transition-transform duration-500 transform p-10 ${isLoading ? 'hidden' : ''}`}
           onClick={(e) => e.stopPropagation()}
           loading="lazy"

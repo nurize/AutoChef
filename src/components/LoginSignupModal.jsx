@@ -97,7 +97,7 @@ const LoginSignupModal = ({ isOpen, onClose }) => {
             </div>
             {action === 'Sign In' && (
               <div className="text-right mt-2">
-                <a href="#" className="text-red-600 text-sm">Forgot password</a>
+                <a href="https://support.google.com/accounts/answer/41078?hl=en&co=GENIE.Platform%3DAndroid" className="text-red-600 text-sm">Forgot password</a>
               </div>
             )}
           </div>

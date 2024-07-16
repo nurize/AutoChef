@@ -1,9 +1,13 @@
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Button from './BookButton';
 
 
-const HeroSection = ({  title, description, description2 , backgroundImage}) => {
-  const navigate = useNavigate()
+const HeroSection = ({  title, description, description2 , backgroundImage, styleProp}) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const isHomePage = location.pathname === '/';
+  const isServices = location.pathname === '/services'
 
   const handleTalkToUsClick = () => [
     navigate('/contact')
@@ -11,7 +15,7 @@ const HeroSection = ({  title, description, description2 , backgroundImage}) => 
 
   return (
     <section 
-      className="bg-cover bg-center h-screen flex items-center bg-black" 
+      className={`bg-cover bg-center ${isHomePage || isServices ? 'h-screen' : 'h-[50vh]'} flex items-center bg-black`}
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       <div className="text-left text-white w-11/12 md:w-2/3 lg:w-2/5 mx-4 md:ml-28">

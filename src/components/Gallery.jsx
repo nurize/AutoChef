@@ -1,3 +1,4 @@
+// Gallery.js
 import React, { useState } from 'react';
 import gallery from '../data/gallery';
 import ImageModal from './ImageModal';
@@ -32,7 +33,7 @@ const Gallery = () => {
           >
             <img 
               src={image} 
-              alt={`Gallery image ${index + 1}`} 
+              alt={`Gallery item ${index + 1}`} 
               className="w-full h-full object-cover transition-transform duration-500 transform hover:scale-110 cursor-pointer"
               loading="lazy"
             />

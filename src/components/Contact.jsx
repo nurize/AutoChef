@@ -2,8 +2,6 @@ import { useState } from 'react';
 import Modal from 'react-modal';
 import engineImage from '../assets/engine-block.png';
 
-Modal.setAppElement('#root'); 
-
 const Contact = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 

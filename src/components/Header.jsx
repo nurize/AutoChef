@@ -1,17 +1,13 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import LoginSignupModal from './LoginSignupModal';
 import Button from './BookButton';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
 
-  const handleLoginOpen = () => setIsLoginOpen(true);
-  const handleLoginClose = () => setIsLoginOpen(false);
 
   return (
-    <header className="bg-black text-white p-5 sticky top-0 z-30">
+    <header className="bg-black text-white p-2 sticky top-0 z-30">
       <nav className="container mx-auto flex justify-between items-center">
         <div className="text-2xl font-bold">
           <NavLink to='/'>Auto<span className='text-red-700'>Chef</span></NavLink>
@@ -93,7 +89,6 @@ const Header = () => {
       {isOpen && (
         <Button styleProp={"block md:hidden bg-red-600 w-full px-6 py-3 mt-4 text-lg font-semibold rounded hover:bg-red-700 transition duration-300"} textProp={"Book Now"}/>
       )}
-      <LoginSignupModal isOpen={isLoginOpen} onClose={handleLoginClose} />
     </header>
   );
 };

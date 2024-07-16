@@ -77,7 +77,7 @@ const FeaturedGallery = () => {
             <div className="relative overflow-hidden rounded-3xl shadow-lg">
               <img
                 src={image}
-                alt={`Gallery image ${index + 1}`}
+                alt={`Gallery item ${index + 1}`}
                 className="w-full h-64 sm:h-80 2xl:h-96 object-cover transition-transform duration-500 transform hover:scale-110 cursor-pointer"
                 onClick={() => setSelectedIndex(index)}
                 loading="lazy"
@@ -85,7 +85,7 @@ const FeaturedGallery = () => {
             </div>
           </div>
         ))}
-      </Slider>
+      </Slider> 
 
       <ImageModal 
         isOpen={selectedIndex !== null} 
