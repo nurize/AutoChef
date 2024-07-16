@@ -9,8 +9,11 @@ const Header = () => {
   return (
     <header className="bg-black text-white p-2 sticky top-0 z-30">
       <nav className="container mx-auto flex justify-between items-center">
-        <div className="text-2xl font-bold">
-          <NavLink to='/'>Auto<span className='text-red-700'>Chef</span></NavLink>
+        <div className="text-3xl font-bold">
+          <NavLink to='/'className='flex'>
+            <img src={require('../assets/auto-chef-logo.png')} alt='logo' className='ml-4 mr-2 w-full h-10'/>
+            Auto<span className='text-red-700'>Chef</span>
+          </NavLink>
         </div>
         <div className="md:hidden">
           <button
