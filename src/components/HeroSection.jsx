@@ -1,20 +1,18 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Button from './BookButton';
 
-
-const HeroSection = ({  title, description, description2 , backgroundImage, styleProp}) => {
+const HeroSection = ({ title, description, description2, backgroundImage }) => {
   const navigate = useNavigate();
   const location = useLocation();
-
   const isHomePage = location.pathname === '/';
   const isServices = location.pathname === '/services'
 
-  const handleTalkToUsClick = () => [
-    navigate('/contact')
-  ]
+  const handleTalkToUsClick = () => {
+    navigate('/contact');
+  };
 
   return (
-    <section 
+    <section
       className={`bg-cover bg-center ${isHomePage || isServices ? 'h-screen' : 'h-[50vh]'} flex items-center bg-black`}
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
@@ -22,15 +20,23 @@ const HeroSection = ({  title, description, description2 , backgroundImage, styl
         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-semibold mb-4 md:mb-10">
           {title}
         </h1>
-        <p className="text-sm md:text-base lg:text-lg mb-4 md:mb8">
+        <p className="text-sm md:text-base lg:text-lg mb-4 md:mb-8">
           {description}
         </p>
-        <p className="text-sm md:text-base lg:text-lg mb-4 md:mb-8">
-          {description2}
-        </p>
-        <div className="flex flex-col md:flex-row">          
-          <Button styleProp={"bg-red-600 hover:bg-red-700 w-full md:w-auto px-6 py-3 mb-4 md:mb-0 md:mr-4 rounded text-sm md:text-lg"} textProp={"Book A Schedule"}/>
-          <button className="bg-white text-red-600 px-6 py-3 rounded text-sm md:text-lg" onClick={handleTalkToUsClick}>
+        {description2 && (
+          <p className="text-sm md:text-base lg:text-lg mb-4 md:mb-8">
+            {description2}
+          </p>
+        )}
+        <div className="flex flex-col md:flex-row">
+          <Button
+            styleProp="bg-red-600 hover:bg-red-700 w-full md:w-auto px-6 py-3 mb-4 md:mb-0 md:mr-4 rounded text-sm md:text-lg"
+            textProp="Book A Schedule"
+          />
+          <button
+            className="bg-white text-red-600 px-6 py-3 rounded text-sm md:text-lg"
+            onClick={handleTalkToUsClick}
+          >
             Talk To Us
           </button>
         </div>
