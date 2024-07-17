@@ -1,101 +1,130 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useReducer } from 'react';
 import Modal from 'react-modal';
-import { FaEnvelope } from 'react-icons/fa';
+import { FaEnvelope, FaApple, FaUser } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
-import { FaApple } from 'react-icons/fa';
 import { MdOutlineVpnKey } from 'react-icons/md';
-import { FaUser } from "react-icons/fa6";
+import classNames from 'classnames';
+
+const initialState = {
+  email: '',
+  firstname: '',
+  lastname: '',
+  password: ''
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'SET_EMAIL':
+      return { ...state, email: action.payload };
+    case 'SET_FIRSTNAME':
+      return { ...state, firstname: action.payload };
+    case 'SET_LASTNAME':
+      return { ...state, lastname: action.payload };
+    case 'SET_PASSWORD':
+      return { ...state, password: action.payload };
+    case 'RESET':
+      return initialState;
+    default:
+      return state;
+  }
+}
+
+const InputField = ({ label, type, icon: Icon, value, onChange }) => (
+  <div className="mb-4">
+    <label className="block text-gray-700">{label}</label>
+    <div className="relative">
+      <Icon className="absolute left-3 top-4 text-gray-400" />
+      <input
+        type={type}
+        className="w-full p-3 pl-10 border border-gray-300 rounded-lg text-black"
+        value={value}
+        onChange={onChange}
+      />
+    </div>
+  </div>
+);
 
 const LoginSignupModal = ({ isOpen, onClose }) => {
   const [action, setAction] = useState('Sign In');
-  const [email, setEmail] = useState('');
-  const [firstname, setFirstname] = useState('');
-  const [lastname, setLastname] = useState('');
-  const [password, setPassword] = useState('');
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  useEffect(() => {
-    const handleKeyDown = (event) => {
+  const handleKeyDown = useCallback(
+    (event) => {
       if (event.key === 'Escape') {
         onClose();
       }
-    };
+    },
+    [onClose]
+  );
 
+  useEffect(() => {
     if (isOpen) {
       document.addEventListener('keydown', handleKeyDown);
     }
-
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, handleKeyDown]);
+
+  const handleSubmit = useCallback((event) => {
+    event.preventDefault();
+  }, []);
+
+  const toggleAction = useCallback(() => {
+    setAction((prevAction) => (prevAction === 'Sign In' ? 'Sign Up' : 'Sign In'));
+    dispatch({ type: 'RESET' });
+  }, []);
 
   return (
     <Modal
       isOpen={isOpen}
       onRequestClose={onClose}
       overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center p-4 sm:p-6 md:p-8"
-      className={`relative bg-white py-8 px-6 sm:px-10 md:px-14 lg:px-20 rounded-lg shadow-lg w-full ${action === 'Sign In' ? 'sm:w-4/5 md:w-3/5 lg:w-2/5 2xl:w-1/3' : 'max-w-xl'} `}
+      className={classNames(
+        'relative bg-white py-8 px-6 sm:px-10 md:px-14 lg:px-20 rounded-lg shadow-lg w-full',
+        action === 'Sign In' ? 'sm:w-4/5 md:w-3/5 lg:w-2/5 2xl:w-1/3' : 'max-w-xl'
+      )}
     >
       <h2 className="text-2xl font-bold text-black mb-4 text-center">{action}</h2>
       <p className="text-center text-gray-500 mb-8">Please enter your details</p>
-      <form>
+      <form onSubmit={handleSubmit}>
         {action === 'Sign Up' && (
           <>
-            <div className="mb-4">
-              <label className="block text-gray-700">First Name</label>
-              <div className="relative">
-                <FaUser className="absolute left-3 top-4 text-gray-400" />
-                <input
-                  type="text"
-                  className="w-full p-3 pl-10 border border-gray-300 rounded-lg text-black"
-                  value={firstname}
-                  onChange={(e) => setFirstname(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Last Name</label>
-              <div className="relative">
-                <FaUser className="absolute left-3 top-4 text-gray-400" />
-                <input
-                  type="text"
-                  className="w-full p-3 pl-10 border border-gray-300 rounded-lg text-black"
-                  value={lastname}
-                  onChange={(e) => setLastname(e.target.value)}
-                />
-              </div>
-            </div>
+            <InputField
+              label="First Name"
+              type="text"
+              icon={FaUser}
+              value={state.firstname}
+              onChange={(e) => dispatch({ type: 'SET_FIRSTNAME', payload: e.target.value })}
+            />
+            <InputField
+              label="Last Name"
+              type="text"
+              icon={FaUser}
+              value={state.lastname}
+              onChange={(e) => dispatch({ type: 'SET_LASTNAME', payload: e.target.value })}
+            />
           </>
         )}
-        <div className="mb-4">
-          <label className="block text-gray-700">Email</label>
-          <div className="relative">
-            <FaEnvelope className="absolute left-3 top-4 text-gray-400" />
-            <input
-              type="email"
-              className="w-full p-3 pl-10 border border-gray-300 rounded-lg text-black"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+        <InputField
+          label="Email"
+          type="email"
+          icon={FaEnvelope}
+          value={state.email}
+          onChange={(e) => dispatch({ type: 'SET_EMAIL', payload: e.target.value })}
+        />
+        <InputField
+          label="Password"
+          type="password"
+          icon={MdOutlineVpnKey}
+          value={state.password}
+          onChange={(e) => dispatch({ type: 'SET_PASSWORD', payload: e.target.value })}
+        />
+        {action === 'Sign In' && (
+          <div className="text-right mt-2">
+            <a href="https://support.google.com/accounts/answer/41078?hl=en&co=GENIE.Platform%3DAndroid" className="text-red-600 text-sm">Forgot password</a>
           </div>
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Password</label>
-          <div className="relative">
-            <MdOutlineVpnKey className="absolute left-3 top-4 text-gray-400" />
-            <input
-              type="password"
-              className="w-full p-3 pl-10 border border-gray-300 rounded-lg text-black"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          {action === 'Sign In' && (
-            <div className="text-right mt-2">
-              <a href="https://support.google.com/accounts/answer/41078?hl=en&co=GENIE.Platform%3DAndroid" className="text-red-600 text-sm">Forgot password</a>
-            </div>
-          )}
-        </div>
+        )}
         <button type="submit" className="bg-red-600 text-white w-full py-2 rounded-lg mb-6">{action}</button>
       </form>
       <div className="flex items-center mb-6">
@@ -114,7 +143,7 @@ const LoginSignupModal = ({ isOpen, onClose }) => {
       <p className="text-center text-gray-500">
         {action === 'Sign In' ? "Don't" : 'Already'} have an account? 
         <button 
-          onClick={() => setAction(action === 'Sign In' ? 'Sign Up' : 'Sign In')} 
+          onClick={toggleAction} 
           className="text-red-600 ml-1">
           {action === 'Sign In' ? 'Sign Up' : 'Sign In'}
         </button>

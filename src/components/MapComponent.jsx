@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import PropTypes from 'prop-types';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
 const containerStyle = {
@@ -7,20 +8,29 @@ const containerStyle = {
 };
 
 const MapComponent = ({ locations }) => {
-  const center = {
+  const center = useMemo(() => ({
     lat: locations[0].lat,
     lng: locations[0].lng,
-  };
+  }), [locations]);
+
+  const markers = useMemo(() => locations.map((location, index) => (
+    <Marker key={index} position={{ lat: location.lat, lng: location.lng }} />
+  )), [locations]);
 
   return (
     <LoadScript googleMapsApiKey="YOUR_GOOGLE_MAPS_API_KEY">
       <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={10}>
-        {locations.map((location, index) => (
-          <Marker key={index} position={{ lat: location.lat, lng: location.lng }} />
-        ))}
+        {markers}
       </GoogleMap>
     </LoadScript>
   );
+};
+
+MapComponent.propTypes = {
+  locations: PropTypes.arrayOf(PropTypes.shape({
+    lat: PropTypes.number.isRequired,
+    lng: PropTypes.number.isRequired,
+  })).isRequired,
 };
 
 export default MapComponent;

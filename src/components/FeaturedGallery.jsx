@@ -7,6 +7,7 @@ import ImageModal from './ImageModal';
 
 const FeaturedGallery = () => {
   const [selectedIndex, setSelectedIndex] = useState(null);
+  const [centerIndex, setCenterIndex] = useState(0);
   const featuredGallery = gallery.slice(0, 6);
 
   const settings = {
@@ -16,22 +17,27 @@ const FeaturedGallery = () => {
     slidesToShow: 3,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 3000,
+    autoplaySpeed: 2500,
     centerMode: true,
     centerPadding: '0',
     arrows: false,
-    customPaging: () => <div className="w-full h-[6px] bg-white m-7 "></div>,
+    customPaging: (i) => (
+      <div
+        className={`w-full h-[6px] ${
+          i === centerIndex ? 'bg-red-600' : 'bg-gray-200'
+        } m-7 transition-colors duration-500`}
+      ></div>
+    ),
     dotsClass: 'slick-dots custom-dots',
+    beforeChange: (oldIndex, newIndex) => {
+      setCenterIndex(newIndex);
+    },
     responsive: [
       {
         breakpoint: 1024,
         settings: {
           slidesToShow: 2,
           slidesToScroll: 1,
-          infinite: true,
-          dots: true,
-          centerMode: true,
-          centerPadding: '0',
         },
       },
       {
@@ -39,9 +45,6 @@ const FeaturedGallery = () => {
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
-          dots: true,
-          centerMode: true,
-          centerPadding: '0',
         },
       },
       {
@@ -49,31 +52,16 @@ const FeaturedGallery = () => {
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
-          dots: true,
-          centerMode: true,
-          centerPadding: '0',
         },
       },
     ],
-  };
-
-  const handleCloseModal = () => {
-    setSelectedIndex(null);
-  };
-
-  const handlePrevious = () => {
-    setSelectedIndex((selectedIndex - 1 + gallery.length) % gallery.length);
-  };
-
-  const handleNext = () => {
-    setSelectedIndex((selectedIndex + 1) % gallery.length);
   };
 
   return (
     <div className="container mx-auto px-2 md:px-4 pt-10 pb-16">
       <Slider {...settings}>
         {featuredGallery.map((image, index) => (
-          <div key={index} className="px-2">
+          <div key={index} className="px-2 transition-transform duration-500 ease-in-out transform hover:scale-105">
             <div className="relative overflow-hidden rounded-3xl shadow-lg">
               <img
                 src={image}
@@ -85,14 +73,14 @@ const FeaturedGallery = () => {
             </div>
           </div>
         ))}
-      </Slider> 
+      </Slider>
 
-      <ImageModal 
-        isOpen={selectedIndex !== null} 
-        image={gallery[selectedIndex]} 
-        onClose={handleCloseModal} 
-        onPrevious={handlePrevious} 
-        onNext={handleNext} 
+      <ImageModal
+        isOpen={selectedIndex !== null}
+        image={gallery[selectedIndex]}
+        onClose={() => setSelectedIndex(null)}
+        onPrevious={() => setSelectedIndex((selectedIndex - 1 + gallery.length) % gallery.length)}
+        onNext={() => setSelectedIndex((selectedIndex + 1) % gallery.length)}
       />
     </div>
   );

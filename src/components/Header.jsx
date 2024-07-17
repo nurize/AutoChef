@@ -5,21 +5,27 @@ import Button from './BookButton';
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const toggleMenu = () => setIsOpen(!isOpen);
+
+  const menuItems = [
+    { path: '/', label: 'Home' },
+    { path: '/services', label: 'Services' },
+    { path: '/about', label: 'About' },
+    { path: '/gallery', label: 'Gallery' },
+    { path: '/contact', label: 'Contact Us' },
+  ];
 
   return (
-    <header className="bg-black text-white p-2 sticky top-0 z-30">
+    <header className="bg-black text-white p-2 fixed top-0 left-0 right-0 z-30">
       <nav className="container mx-auto flex justify-between items-center">
-        <div className="text-3xl font-bold">
-          <NavLink to='/'className='flex'>
-            <img src={require('../assets/auto-chef-logo.png')} alt='logo' className='ml-4 mr-2 w-full h-10'/>
+        <div className="text-xl font-bold flex items-center">
+          <NavLink to='/' className='flex items-center'>
+            <img src={require('../assets/auto-chef-logo.png')} alt='logo' className='ml-4 mr-2 w-10 h-10'/>
             Auto<span className='text-red-700'>Chef</span>
           </NavLink>
         </div>
         <div className="md:hidden">
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="focus:outline-none"
-          >
+          <button onClick={toggleMenu} className="focus:outline-none">
             <svg
               className="w-6 h-6"
               fill="none"
@@ -28,70 +34,34 @@ const Header = () => {
               xmlns="http://www.w3.org/2000/svg"
             >
               {isOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
               ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h16m-7 6h7"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
               )}
             </svg>
           </button>
         </div>
-        <ul className={`md:flex md:flex-row md:space-x-4 gap-4 ${isOpen ? 'block' : 'hidden'} md:block`}>
-          <li>
-            <NavLink 
-              to="/" 
-              className={({ isActive }) => `nav-link block md:inline py-2 md:py-0 ${isActive ? 'text-red-700 font-bold' : ''}`}
-            >
-              Home
-            </NavLink>
-          </li>
-          <li>
-            <NavLink 
-              to="/services" 
-              className={({ isActive }) => `nav-link block md:inline py-2 md:py-0 ${isActive ? 'text-red-700 font-bold' : ''}`}
-            >
-              Services
-            </NavLink>
-          </li>
-          <li>
-            <NavLink 
-              to="/about" 
-              className={({ isActive }) => `nav-link block md:inline py-2 md:py-0 ${isActive ? 'text-red-700 font-bold' : ''}`}
-            >
-              About
-            </NavLink>
-          </li>
-          <li>
-            <NavLink 
-              to="/gallery" 
-              className={({ isActive }) => `nav-link block md:inline py-2 md:py-0 ${isActive ? 'text-red-700 font-bold' : ''}`}
-            >
-              Gallery
-            </NavLink>
-          </li>
-          <li>
-            <NavLink 
-              to="/contact" 
-              className={({ isActive }) => `nav-link block md:inline py-2 md:py-0 ${isActive ? 'text-red-700 font-bold' : ''}`}
-            >
-              Contact Us
-            </NavLink>
-          </li>
+        <ul className={`md:flex md:flex-row md:space-x-4 gap-4 ${isOpen ? 'block' : 'hidden'} md:block absolute md:relative top-full left-0 w-full md:w-auto bg-black md:bg-transparent`}>
+          {menuItems.map((item, index) => (
+            <li key={index} className="md:border-none">
+              <NavLink 
+                to={item.path} 
+                className={({ isActive }) => `nav-link block md:inline py-2 md:py-0 px-4 md:px-0 ${isActive ? 'text-red-700 font-bold' : ''}`}
+              >
+                {item.label}
+              </NavLink>
+            </li>
+          ))}
+          {isOpen && (
+            <li className="md:hidden">
+              <Button styleProp="w-full bg-red-600 px-6 py-3 text-lg font-semibold hover:bg-red-700 transition duration-300 mt-4 md:mt-0" textProp="Book Now" />
+            </li>
+          )}
         </ul>
-        <Button styleProp={"hidden md:block bg-red-600 px-6 py-3 text-lg font-semibold rounded hover:bg-red-700 transition duration-300"} textProp={"Book Now"}/>
+        <div className="hidden md:block">
+          <Button styleProp="bg-red-600 px-6 py-3 text-lg font-semibold rounded hover:bg-red-700 transition duration-300" textProp="Book Now" />
+        </div>
       </nav>
-      {isOpen && (
-        <Button styleProp={"block md:hidden bg-red-600 w-full px-6 py-3 mt-4 text-lg font-semibold rounded hover:bg-red-700 transition duration-300"} textProp={"Book Now"}/>
-      )}
     </header>
   );
 };

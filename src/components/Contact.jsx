@@ -27,7 +27,7 @@ const Contact = () => {
       <div className="lg:absolute top-0 w-full lg:w-3/4 bg-red-600 text-white p-8 md:p-16 z-0 lg:ml-8">
         <div className="lg:mr-4">
           <h2 className="text-3xl md:text-5xl font-semibold mb-8 md:mb-16">Easy To Contact Us</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:w-1/2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:w-7/12">
             <div className="mb-6">
               <h3 className="text-lg md:text-xl font-semibold mb-2">Opening Hours</h3>
               <p>Monday - Saturday</p>
@@ -41,10 +41,10 @@ const Contact = () => {
                 <div className="bg-white rounded-full p-3 mr-3 min-w-fit">
                   <a href="https://maps.app.goo.gl/Kdr4PQ27nfd6ukvJ7" target='_blank' rel='noopener noreferrer'><img src={require('../assets/contact-location.png')} alt="Location" className="w-5 h-5" /></a>
                 </div>
-                <p>1247/Plot No. 39, 15th Phase, Colony, Kukatpally, Hyderabad</p>
+                <p>Achimota Mile 7</p>
               </div>
               <div className="flex items-center">
-                <div className="bg-white rounded-full p-3 mr-3">
+                <div className="bg-white rounded-full p-3 mr-3 min-w-fit">
                   <a href="mailto:autochef83@gmail.com"><img src={require('../assets/contact-email.png')} alt="Email" className="w-5 h-5" /></a>
                 </div>
                 <p>autochef83@gmail.com</p>
@@ -56,7 +56,7 @@ const Contact = () => {
           </button>
         </div>
       </div>
-      <div className="relative z-10 mt-8 ml-auto pt-12 lg:mt-0 lg:mr-32 w-5/12 h-3/5 align-bottom hidden lg:block">
+      <div className="relative z-10 mt-8 ml-auto pt-12 lg:mt-0 lg:mr-28 w-5/12 h-3/5 align-bottom hidden lg:block">
         <img 
           src={engineImage} 
           alt="Engine" 
