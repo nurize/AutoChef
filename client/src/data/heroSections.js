@@ -8,7 +8,7 @@ const heroSections = [
   {
     page: '/about',
     backgroundImage: require('../assets/Hero-bg-Image.png'),
-    title: 'Learn More About Us',
+    title: 'About Us',
     description: 'We are dedicated to providing the best service and value for our customers.',
   },
   {

@@ -28,8 +28,8 @@ const contactInfo = [
   { type: 'phone', value: '020 066 6211', link: 'tel:+233200666211', icon: '📞' },
   { type: 'email', value: 'theautochef83@gmail.com', link: 'mailto:autochef83@gmail.com', icon: '✉️' },
   { type: 'address', value: '5 Delaware Dr, Tongwell, Milton Keynes MK15 8HG', icon: '📍' },
-  { type: 'address', value: 'No.5 The Heights, Weybridge, Surrey, KT13 0NY', icon: '📍' },
-  { type: 'address', value: '274a Baker Street, Enfield, London, EN1 3LD', icon: '📍' },
+  // { type: 'address', value: 'No.5 The Heights, Weybridge, Surrey, KT13 0NY', icon: '📍' },
+  // { type: 'address', value: '274a Baker Street, Enfield, London, EN1 3LD', icon: '📍' },
 ];
 
 const ContactPage = () => {
