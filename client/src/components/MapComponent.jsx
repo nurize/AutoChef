@@ -1,36 +1,30 @@
-import React, { useMemo } from 'react';
-import PropTypes from 'prop-types';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import React from "react";
+import GoogleMapReact from 'google-map-react';
 
-const containerStyle = {
-  width: '100%',
-  height: '400px',
-};
+const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
-const MapComponent = ({ locations }) => {
-  const center = useMemo(() => ({
-    lat: locations[0].lat,
-    lng: locations[0].lng,
-  }), [locations]);
-
-  const markers = useMemo(() => locations.map((location, index) => (
-    <Marker key={index} position={{ lat: location.lat, lng: location.lng }} />
-  )), [locations]);
+export default function SimpleMap(){
+  const defaultProps = {
+    center: {
+      lat: 10.99835602,
+      lng: 77.01502627
+    },
+    zoom: 11
+  };
 
   return (
-    <LoadScript googleMapsApiKey="YOUR_GOOGLE_MAPS_API_KEY">
-      <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={10}>
-        {markers}
-      </GoogleMap>
-    </LoadScript>
+    <div style={{ height: '100vh', width: '100%' }}>
+      <GoogleMapReact
+        bootstrapURLKeys={{ key: "" }}
+        defaultCenter={defaultProps.center}
+        defaultZoom={defaultProps.zoom}
+      >
+        <AnyReactComponent
+          lat={59.955413}
+          lng={30.337844}
+          text="My Marker"
+        />
+      </GoogleMapReact>
+    </div>
   );
-};
-
-MapComponent.propTypes = {
-  locations: PropTypes.arrayOf(PropTypes.shape({
-    lat: PropTypes.number.isRequired,
-    lng: PropTypes.number.isRequired,
-  })).isRequired,
-};
-
-export default MapComponent;
+}
