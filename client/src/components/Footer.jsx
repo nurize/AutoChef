@@ -38,7 +38,7 @@ const Footer = () => {
 
       <footer className="bg-black text-white pb-2 pt-32 md:pt-40 lg:pt-48 px-4 md:px-16 w-full">
         <div className="container mx-auto">
-          <div className="flex flex-col md:flex-row md:gap-8 lg:justify-between mb-16">
+          <div className="flex flex-col md:flex-row md:gap-8 text-center md:text-left lg:justify-between mb-16">
             <div className="w-full md:w-2/5 mb-8 md:mb-0">
               <div className="text-2xl font-bold">
                 <Link to="/">Auto<span className="text-red-700">Chef</span></Link>
