@@ -7,19 +7,19 @@ import '@fontsource/inter/700.css';
 const EmailSignUp = () => {
   return (
     <div 
-      className="bg-cover bg-center flex flex-col items-center md:mx-auto w-full md:w-11/12 lg:w-4/5 mt-24 py-10 md:py-16 lg:py-24 justify-center bg-gray-700 text-white" 
+      className="bg-cover bg-center flex flex-col items-center md:mx-auto w-full md:w-11/12 lg:w-4/5 mt-24 py-12 md:py-16 lg:py-24 justify-center bg-gray-700 text-white" 
       style={{ 
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${BackgroundImage})`,
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4)), url(${BackgroundImage})`,
         fontFamily: 'Inter, sans-serif'
       }}
     >
-      <div className="text-center mb-8">
-        <h1 className="text-2xl md:text-3xl lg:text-4xl mb-4">
+      <div className="text-center mb-8 mx-6">
+        <h1 className="text-xl md:text-2xl lg:text-3xl">
           Email us for any concerns with your car.
+          <span className="md:block ml-1">
+            Sign Up for Exclusive Car Updates!
+          </span>
         </h1>
-        <p className="text-lg md:text-xl lg:text-2xl">
-          Sign Up for Exclusive Car Updates!
-        </p>
       </div>
       <div className="flex flex-col md:flex-row items-center md:py-1 w-full md:w-2/3 lg:w-1/2 justify-between md:px-2 md:rounded-md md:bg-white">
         <input

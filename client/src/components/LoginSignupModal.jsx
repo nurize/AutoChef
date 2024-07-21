@@ -79,7 +79,7 @@ const LoginSignupModal = ({ isOpen, onClose }) => {
     <Modal
       isOpen={isOpen}
       onRequestClose={onClose}
-      overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center p-4 sm:p-6 md:p-8"
+      overlayClassName="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center p-4 sm:p-6 md:p-8"
       className={classNames(
         'relative bg-white py-8 px-6 sm:px-10 md:px-14 lg:px-20 rounded-lg shadow-lg w-full',
         action === 'Sign In' ? 'sm:w-4/5 md:w-3/5 lg:w-2/5 2xl:w-1/3' : 'max-w-xl'

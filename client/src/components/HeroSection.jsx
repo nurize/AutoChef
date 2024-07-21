@@ -13,12 +13,12 @@ const HeroSection = ({ title, description, description2, backgroundImage }) => {
 
   return (
     <section
-      className={`bg-cover bg-center ${isHomePage || isServices ? 'h-screen' : 'h-[60vh]'} flex items-center`}
+      className={`bg-cover bg-center bg-black ${isHomePage || isServices ? 'h-screen' : 'h-[60vh]'} flex items-center`}
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       <div className="bg-black bg-opacity-10 w-full h-full flex items-center">
         <div className="text-left text-white w-11/12 md:w-2/3 lg:w-2/5 mx-4 md:ml-28 p-4 md:p-8">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-semibold mb-4 md:mb-10">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold my-4 md:my-10">
             {title}
           </h1>
           <p className="text-sm md:text-base lg:text-lg mb-4 md:mb-8">

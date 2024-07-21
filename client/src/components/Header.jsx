@@ -19,9 +19,11 @@ const Header = () => {
     <header className="bg-black text-white p-2 fixed top-0 left-0 right-0 z-30">
       <nav className="container mx-auto flex justify-between items-center">
         <div className="text-xl font-bold flex items-center">
-          <NavLink to='/' className='flex items-center'>
-            <img src={require('../assets/auto-chef-logo.png')} alt='logo' className='ml-4 mr-2 w-10 h-10'/>
-            Auto<span className='text-red-700'>Chef</span>
+          <NavLink to='/' className='flex items-center font-serif'>
+            <img src={require('../assets/auto-chef-logo.png')} alt='logo' className='ml-4 mr-2 w-16 h-10'/>
+             <div className='hidden md:block font-thin'>
+             Auto<span className='text-red700'>Chef</span>
+             </div>
           </NavLink>
         </div>
         <div className="md:hidden">
@@ -46,7 +48,7 @@ const Header = () => {
             <li key={index} className="md:border-none">
               <NavLink 
                 to={item.path} 
-                className={({ isActive }) => `nav-link block md:inline py-2 md:py-0 px-4 md:px-0 ${isActive ? 'text-red-700 font-bold' : ''}`}
+                className={({ isActive }) => `hover:text-red-700 block md:inline py-2 md:py-0 px-4 md:px-0 ${isActive ? 'text-red-700 fontbold' : ''}`}
               >
                 {item.label}
               </NavLink>
