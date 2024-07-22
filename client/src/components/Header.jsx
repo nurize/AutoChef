@@ -3,10 +3,13 @@ import { NavLink } from 'react-router-dom';
 import Button from './BookButton';
 
 const Header = () => {
+  // State to manage mobile menu visibility
   const [isOpen, setIsOpen] = useState(false);
 
+  // Toggle mobile menu open/closed
   const toggleMenu = () => setIsOpen(!isOpen);
 
+  // Navigation menu items
   const menuItems = [
     { path: '/', label: 'Home' },
     { path: '/services', label: 'Services' },
@@ -18,14 +21,21 @@ const Header = () => {
   return (
     <header className="bg-black text-white p-2 fixed top-0 left-0 right-0 z-30">
       <nav className="container mx-auto flex justify-between items-center">
+        {/* Logo and site name */}
         <div className="text-xl font-bold flex items-center">
           <NavLink to='/' className='flex items-center font-serif'>
-            <img src={require('../assets/auto-chef-logo.png')} alt='logo' className='ml-4 mr-2 w-16 h-10'/>
-             <div className='hidden md:block font-thin'>
-             Auto<span className='text-red700'>Chef</span>
-             </div>
+            <img 
+              src={require('../assets/auto-chef-logo.png')} 
+              alt='logo' 
+              className='ml-4 mr-2 w-16 h-10'
+            />
+            <div className='hidden md:block font-thin'>
+              Auto<span className='text-red700'>Chef</span>
+            </div>
           </NavLink>
         </div>
+
+        {/* Mobile menu toggle button */}
         <div className="md:hidden">
           <button onClick={toggleMenu} className="focus:outline-none">
             <svg
@@ -43,6 +53,8 @@ const Header = () => {
             </svg>
           </button>
         </div>
+
+        {/* Navigation links */}
         <ul className={`md:flex md:flex-row md:space-x-4 gap-4 ${isOpen ? 'block' : 'hidden'} md:block absolute md:relative top-full left-0 w-full md:w-auto bg-black md:bg-transparent`}>
           {menuItems.map((item, index) => (
             <li key={index} className="md:border-none">
@@ -54,14 +66,23 @@ const Header = () => {
               </NavLink>
             </li>
           ))}
+          {/* Mobile-only Book Now button */}
           {isOpen && (
             <li className="md:hidden">
-              <Button styleProp="w-full bg-red-600 px-6 py-3 text-lg font-semibold hover:bg-red-700 transition duration-300 mt-4 md:mt-0" textProp="Book Now" />
+              <Button 
+                styleProp="w-full bg-red-600 px-6 py-3 text-lg font-semibold hover:bg-red-700 transition duration-300 mt-4 md:mt-0" 
+                textProp="Book Now" 
+              />
             </li>
           )}
         </ul>
+
+        {/* Desktop-only Book Now button */}
         <div className="hidden md:block">
-          <Button styleProp="bg-red-600 px-6 py-3 text-lg font-semibold rounded hover:bg-red-700 transition duration-300" textProp="Book Now" />
+          <Button 
+            styleProp="bg-red-600 px-6 py-3 text-lg font-semibold rounded hover:bg-red-700 transition duration-300" 
+            textProp="Book Now" 
+          />
         </div>
       </nav>
     </header>

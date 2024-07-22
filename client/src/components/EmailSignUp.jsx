@@ -4,6 +4,7 @@ import '@fontsource/inter/500.css';
 import '@fontsource/inter/600.css';
 import '@fontsource/inter/700.css';
 
+// EmailSignUp component renders a section for users to sign up with their email
 const EmailSignUp = () => {
   return (
     <div 
@@ -13,6 +14,7 @@ const EmailSignUp = () => {
         fontFamily: 'Inter, sans-serif'
       }}
     >
+      {/* Header text */}
       <div className="text-center mb-8 mx-6">
         <h1 className="text-xl md:text-2xl lg:text-3xl">
           Email us for any concerns with your car.
@@ -21,6 +23,8 @@ const EmailSignUp = () => {
           </span>
         </h1>
       </div>
+      
+      {/* Email input and submit button */}
       <div className="flex flex-col md:flex-row items-center md:py-1 w-full md:w-2/3 lg:w-1/2 justify-between md:px-2 md:rounded-md md:bg-white">
         <input
           type="email"

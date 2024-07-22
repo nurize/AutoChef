@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import Modal from 'react-modal';
 
 const BookingForm = ({ isSignedIn }) => {
+  // State to manage the visibility and booking confirmation status of the modal
   const [modalState, setModalState] = useState({ isOpen: false, isBookingConfirmed: false });
+  
+  // State to manage the form data
   const [formData, setFormData] = useState({
     fullName: '',
     contactNumber: '',
@@ -10,6 +13,7 @@ const BookingForm = ({ isSignedIn }) => {
     serviceInfo: ''
   });
 
+  // Handler for input field changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
@@ -18,23 +22,28 @@ const BookingForm = ({ isSignedIn }) => {
     }));
   };
 
+  // Function to open the modal
   const handleOpenModal = (e) => {
     e.preventDefault();
     setModalState({ ...modalState, isOpen: true });
   };
 
+  // Function to confirm the booking
   const handleConfirmBooking = () => {
     setModalState({ isOpen: false, isBookingConfirmed: true });
   };
 
+  // Function to close the modal
   const handleCloseModal = () => {
     setModalState({ ...modalState, isOpen: false });
   };
 
+  // Function to close the booking confirmation modal
   const handleCloseConfirmationModal = () => {
     setModalState({ ...modalState, isBookingConfirmed: false });
   };
 
+  // Function to render input fields
   const renderInputField = (label, type, name, placeholder) => (
     <div className="flex-1">
       <label className="block text-sm font-medium text-gray-700">{label}</label>
@@ -49,6 +58,7 @@ const BookingForm = ({ isSignedIn }) => {
     </div>
   );
 
+  // Function to render modal
   const renderModal = (isOpen, onRequestClose, title, content, actions) => (
     <Modal
       isOpen={isOpen}
@@ -110,6 +120,7 @@ const BookingForm = ({ isSignedIn }) => {
         </button>
       </form>
 
+      {/* Modal to confirm booking */}
       {renderModal(
         modalState.isOpen,
         handleCloseModal,
@@ -131,6 +142,7 @@ const BookingForm = ({ isSignedIn }) => {
         </>
       )}
 
+      {/* Modal to display booking confirmation */}
       {renderModal(
         modalState.isBookingConfirmed,
         handleCloseConfirmationModal,

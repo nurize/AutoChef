@@ -5,6 +5,7 @@ import { FcGoogle } from 'react-icons/fc';
 import { MdOutlineVpnKey } from 'react-icons/md';
 import classNames from 'classnames';
 
+// Initial state for form inputs
 const initialState = {
   email: '',
   firstname: '',
@@ -12,6 +13,7 @@ const initialState = {
   password: ''
 };
 
+// Reducer function to handle form state updates
 function reducer(state, action) {
   switch (action.type) {
     case 'SET_EMAIL':
@@ -29,6 +31,7 @@ function reducer(state, action) {
   }
 }
 
+// Component for individual input fields with icons
 const InputField = ({ label, type, icon: Icon, value, onChange }) => (
   <div className="mb-4">
     <label className="block text-gray-700">{label}</label>
@@ -45,18 +48,24 @@ const InputField = ({ label, type, icon: Icon, value, onChange }) => (
 );
 
 const LoginSignupModal = ({ isOpen, onClose }) => {
-  const [action, setAction] = useState('Sign In');
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [action, setAction] = useState('Sign In'); // Current action (Sign In or Sign Up)
+  const [state, dispatch] = useReducer(reducer, initialState); // Form state management
 
+  // Handle keyboard events (Escape to close, Arrow keys for navigation)
   const handleKeyDown = useCallback(
     (event) => {
       if (event.key === 'Escape') {
         onClose();
+      } else if (event.key === 'ArrowLeft') {
+        // Handle previous action if applicable
+      } else if (event.key === 'ArrowRight') {
+        // Handle next action if applicable
       }
     },
     [onClose]
   );
 
+  // Set up and clean up keyboard event listeners
   useEffect(() => {
     if (isOpen) {
       document.addEventListener('keydown', handleKeyDown);
@@ -66,13 +75,15 @@ const LoginSignupModal = ({ isOpen, onClose }) => {
     };
   }, [isOpen, handleKeyDown]);
 
+  // Handle form submission (currently does nothing)
   const handleSubmit = useCallback((event) => {
     event.preventDefault();
   }, []);
 
+  // Toggle between Sign In and Sign Up forms
   const toggleAction = useCallback(() => {
     setAction((prevAction) => (prevAction === 'Sign In' ? 'Sign Up' : 'Sign In'));
-    dispatch({ type: 'RESET' });
+    dispatch({ type: 'RESET' }); // Reset form fields on action change
   }, []);
 
   return (

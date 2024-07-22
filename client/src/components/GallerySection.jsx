@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
 import FeaturedGallery from "./FeaturedGallery";
 
-
-
+// Renders a section with a title, description, featured gallery, and a "View More" link
 const GallerySection = () => {
   return (
     <div className="container py-8 mx-auto ">
