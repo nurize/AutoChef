@@ -1,33 +1,50 @@
 // routes/upload.js
 const express = require('express');
 const router = express.Router();
-const upload = require('../config/multer'); // Adjust the path accordingly
+const upload = require('../config/multer');
 const Image = require('../models/image');
+const Service = require('../models/service'); 
 
 // Uploading Images
 router.post('/', (req, res) => {
-  upload(req, res, (err) => {
+  upload(req, res, async (err) => {
     if (err) {
       return res.status(400).json({ message: err });
     } else {
       if (req.file == undefined) {
         return res.status(400).json({ message: 'No file selected!' });
       } else {
-        // Save image data to MongoDB
-        const newImage = new Image({
-          filename: req.file.originalname,
-          data: req.file.buffer,
-          contentType: req.file.mimetype
-        });
+        const { serviceType } = req.body;
 
-        newImage.save().then(image => {
-          res.status(200).json({
-            message: 'File uploaded successfully!',
-            image: image
+        if (!serviceType) {
+          return res.status(400).json({ message: 'Please provide service type' });
+        }
+
+        // Verify if service type exists
+        try {
+          const service = await Service.findById(serviceType);
+          if (!service) {
+            return res.status(400).json({ message: 'Invalid service type' });
+          }
+
+          // Save image data to MongoDB with service type
+          const newImage = new Image({
+            filename: req.file.originalname,
+            data: req.file.buffer,
+            contentType: req.file.mimetype,
+            serviceType: serviceType // Save the service type ID
           });
-        }).catch(err => {
-          res.status(500).json({ message: 'Failed to save image data.' });
-        });
+
+          const savedImage = await newImage.save();
+          res.status(200).json({
+            message: 'File uploaded and categorized successfully!',
+            image: savedImage
+          });
+
+        } catch (error) {
+          console.error('Error saving image:', error);
+          res.status(500).json({ message: 'Server error' });
+        }
       }
     }
   });
