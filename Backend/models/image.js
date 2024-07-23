@@ -16,6 +16,11 @@ const ImageSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  serviceType: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Service',
+    required: true
   }
 });
 
