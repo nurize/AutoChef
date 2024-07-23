@@ -19,6 +19,7 @@ const BookedServices = () => {
             <th className="py-2">Service</th>
             <th className="py-2">Customer</th>
             <th className="py-2">Date</th>
+            <th className="py-2">Progress</th>
           </tr>
         </thead>
         <tbody>
