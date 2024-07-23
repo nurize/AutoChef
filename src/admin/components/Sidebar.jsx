@@ -8,16 +8,16 @@ const Sidebar = () => {
       <nav>
         <ul>
           <li>
-            <NavLink to="/" end className="block py-2 px-4 hover:bg-gray-700">Dashboard</NavLink>
+            <NavLink to="/admin" end className="block py-2 px-4 hover:bg-gray-700">Dashboard</NavLink>
           </li>
           <li>
-            <NavLink to="/booked-services" className="block py-2 px-4 hover:bg-gray-700">Booked Services</NavLink>
+            <NavLink to="/admin/booked-services" className="block py-2 px-4 hover:bg-gray-700">Booked Services</NavLink>
           </li>
           <li>
-            <NavLink to="/gallery" className="block py-2 px-4 hover:bg-gray-700">Gallery</NavLink>
+            <NavLink to="/admin/gallery" className="block py-2 px-4 hover:bg-gray-700">Gallery</NavLink>
           </li>
           <li>
-            <NavLink to="/services" className="block py-2 px-4 hover:bg-gray-700">Services</NavLink>
+            <NavLink to="/admin/services" className="block py-2 px-4 hover:bg-gray-700">Services</NavLink>
           </li>
         </ul>
       </nav>
