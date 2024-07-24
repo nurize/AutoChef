@@ -47,8 +47,8 @@ const InputField = ({ label, type, icon: Icon, value, onChange }) => (
   </div>
 );
 
-const LoginSignupModal = ({ isOpen, onClose }) => {
-  const [action, setAction] = useState('Sign In'); // Current action (Sign In or Sign Up)
+const LoginSignupModal = ({ isOpen, onClose, initialAction }) => {
+  const [action, setAction] = useState(initialAction || 'Sign In'); // Current action (Sign In or Sign Up)
   const [state, dispatch] = useReducer(reducer, initialState); // Form state management
 
   // Handle keyboard events (Escape to close, Arrow keys for navigation)
@@ -136,9 +136,9 @@ const LoginSignupModal = ({ isOpen, onClose }) => {
             <a href="https://support.google.com/accounts/answer/41078?hl=en&co=GENIE.Platform%3DAndroid" className="text-red-600 text-sm">Forgot password</a>
           </div>
         )}
-        <button type="submit" className="bg-red-600 text-white w-full py-2 rounded-lg mb-6">{action}</button>
+        <button type="submit" className="bg-red-600 text-white w-full py-2 rounded-lg my-6">{action}</button>
       </form>
-      <div className="flex items-center mb-6">
+      {/* <div className="flex items-center mb-6">
         <div className="flex-grow border-t border-gray-300"></div>
         <span className="mx-2 text-gray-500">Or continue with</span>
         <div className="flex-grow border-t border-gray-300"></div>
@@ -150,8 +150,8 @@ const LoginSignupModal = ({ isOpen, onClose }) => {
         <button className="bg-white text-black border border-gray-300 p-2 rounded-full">
           <FaApple className="text-2xl" />
         </button>
-      </div>
-      <p className="text-center text-gray-500">
+      </div> */}
+      <p className="text-center text-gray-500 mt-4">
         {action === 'Sign In' ? "Don't" : 'Already'} have an account? 
         <button 
           onClick={toggleAction} 
