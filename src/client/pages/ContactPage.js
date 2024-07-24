@@ -8,11 +8,6 @@ import {
   FaTiktok,
   FaLinkedinIn,
 } from 'react-icons/fa';
-import MapComponent from '../components/MapComponent';
-
-const locations = [
-  { lat: 51.509865, lng: -0.118092 },
-];
 
 const socialMediaIcons = [
   { Icon: FaInstagram, key: 'instagram', link: 'https://instagram.com/autochef_gh' },
@@ -45,7 +40,7 @@ const ContactPage = () => {
 
   return (
     <>
-      <div className="bg-white min-h-screen flex flex-col py-16 px-4 w-9/12 mx-auto">
+      <div className="bg-white flex flex-col py-16 px-4 w-9/12 mx-auto">
         <h2 className="text-xl text-black font-bold mb-4">GOT A QUESTION?</h2>
         <h1 className="text-3xl text-black font-extrabold mb-8">GET IN TOUCH</h1>
         <p className="text-lg text-gray-700 mb-16">
@@ -63,7 +58,6 @@ const ContactPage = () => {
           {contactElements}
         </div>
       </div>
-      <MapComponent locations={locations} />
     </>
   );
 };
