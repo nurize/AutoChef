@@ -19,6 +19,7 @@ router.post("/", async(req, res) => {
 
         return res.status(201).send({message: "User Created Succecfully", userId: newUser._id})
     } catch (error) {
+        console.log(error)
        return res.status(500).send({message: "Internal Server Error"});
     }
 });
