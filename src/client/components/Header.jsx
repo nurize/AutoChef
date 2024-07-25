@@ -1,15 +1,17 @@
 import React, { useContext, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { FaUserCircle } from 'react-icons/fa';
-import { UserContext } from '../context/UserContext'; // Importing the context
-import LoginSignupButton from './LoginSignUpButton';
+import { UserContext } from '../context/UserContext'; // Importing the UserContext
+import LoginSignupButton from './LoginSignUpButton'; // Importing a custom button component
 
 const Header = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const { isLoggedIn } = useContext(UserContext); // Access the login status
+  const [isOpen, setIsOpen] = useState(false); // State to manage the mobile menu's open/close status
+  const { isLoggedIn } = useContext(UserContext); // Getting the login status from the context
 
+  // Function to toggle the mobile menu
   const toggleMenu = () => setIsOpen(!isOpen);
 
+  // Array of navigation menu items
   const menuItems = [
     { path: '/', label: 'Home' },
     { path: '/services', label: 'Services' },
@@ -35,6 +37,7 @@ const Header = () => {
         </div>
 
         <div className="md:hidden">
+          {/* Button to toggle the mobile menu */}
           <button onClick={toggleMenu} className="focus:outline-none">
             <svg
               className="w-6 h-6"
@@ -52,6 +55,7 @@ const Header = () => {
           </button>
         </div>
 
+        {/* Navigation menu, conditionally rendered based on isOpen state */}
         <ul className={`md:flex md:flex-row md:space-x-4 gap-4 ${isOpen ? 'block' : 'hidden'} md:block absolute md:relative top-full left-0 w-full md:w-auto bg-black md:bg-transparent`}>
           {menuItems.map((item, index) => (
             <li key={index} className="md:border-none">
@@ -63,14 +67,15 @@ const Header = () => {
               </NavLink>
             </li>
           ))}
+          {/* Show login/signup buttons only on mobile and if not logged in */}
           {isOpen && !isLoggedIn && (
             <li className="md:hidden">
               <LoginSignupButton 
-                styleProp="w-full mx-auto bg-white text-red-600 px-6 py-3 text-lg font-semibold hover:bg-red-700 transition duration-300 mt-4 md:mt-0" 
+                styleProp="w-[90%] mx-auto bg-white text-red-600 px-6 py-3 text-lg font-semibold hover:bg-red-700 transition duration-300 mt-4 md:mt-0" 
                 textProp="Sign In" 
               />
               <LoginSignupButton 
-                styleProp="w-full bg-red-600 px-6 py-3 text-lg font-semibold hover:bg-red-700 transition duration-300 mt-4 md:mt-0" 
+                styleProp="w-[90%] bg-red-600 px-6 py-3 text-lg font-semibold hover:bg-red-700 transition duration-300 mt-4 md:mt-0" 
                 textProp="Sign Up" 
               />
             </li>
@@ -78,6 +83,7 @@ const Header = () => {
         </ul>
 
         <div className="hidden md:flex items-center">
+          {/* Show profile icon or login/signup buttons based on login status */}
           {isLoggedIn ? (
             <div className="flex items-center">
               <NavLink to="/profile" className="text-white">
