@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
-
+// Update a service.
 // Add a new service
 router.post('/',async (req, res) => {
   const { name, description, price, duration } = req.body;
