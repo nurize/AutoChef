@@ -3,6 +3,10 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
+const JWTPRIVATEKEY = "Wisdom(2704)00110011"
+const SALT = 10
+
+
 const app = express();
 const port = process.env.PORT || 8080;
 
@@ -14,7 +18,8 @@ const ImageRoute = require("./routes/images");
 const CustomerReportRoute = require('./routes/customerReport');
 
 // DB connection
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@autochef.gqimjgr.mongodb.net/AutoChef?retryWrites=true&w=majority&appName=AutoChef`;
+//const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@autochef.gqimjgr.mongodb.net/AutoChef?retryWrites=true&w=majority&appName=AutoChef`;
+const uri = `mongodb+srv://cashong005:m6MQB1TxFbh5Oipn@autochef.gqimjgr.mongodb.net/AutoChef?retryWrites=true&w=majority&appName=AutoChef`
 
 mongoose.connect(uri, {
   serverSelectionTimeoutMS: 30000, // 30 seconds

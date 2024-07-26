@@ -66,9 +66,56 @@ const LoginSignupModal = ({ isOpen, onClose }) => {
     };
   }, [isOpen, handleKeyDown]);
 
-  const handleSubmit = useCallback((event) => {
+  const handleSubmit = useCallback(async (event) => {
     event.preventDefault();
-  }, []);
+
+    const url = action === 'Sign In' ? 'http://localhost:8080/api/auth' : 'http://localhost:8080/api/users';
+    
+    const payload = {
+      email: state.email,
+      password: state.password,
+    };
+    
+    if (action === 'Sign Up') {
+      payload.firstname = state.firstname;
+      payload.lastname = state.lastname;
+    }
+    
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      console.log('Success:', data);
+
+      if (action === 'Sign In') {
+        // Handle successful login (e.g., save token, redirect, etc.)
+        console.log('Login Successful', data);
+      } else {
+        // Handle successful sign-up (e.g., show success message, reset form, etc.)
+        console.log('Sign Up Successful', data);
+      }
+
+      onClose(); // Close the modal on success
+    } catch (error) {
+      console.error('Error:', error);
+      // Error-handling (e.g., show error message)
+    }
+  }, [action, state, onClose]);
+
+  // const handleSubmit = useCallback((event) => {
+  //   event.preventDefault();
+  // }, []);
 
   const toggleAction = useCallback(() => {
     setAction((prevAction) => (prevAction === 'Sign In' ? 'Sign Up' : 'Sign In'));
