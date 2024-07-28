@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import UploadSection from '../components/UploadSection';
+import Gallery from '../../client/components/Gallery';
 
-const Gallery = () => {
+const GalleryUpload = () => {
   const [images, setImages] = useState([]);
   const [imageFile, setImageFile] = useState(null);
   const [error, setError] = useState('');
@@ -62,21 +64,17 @@ const Gallery = () => {
   };
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">Gallery</h1>
-      <input type="file" onChange={handleFileChange} />
-      {error && <p className="text-red-500">{error}</p>}
-      <button onClick={handleImageUpload} className="bg-blue-500 text-white p-2 ml-2">Upload Image</button>
-      <div className="grid grid-cols-3 gap-4 mt-4">
-        {images.map(image => (
-          <div key={image.id} className="relative">
-            <img src={image.url} alt="Gallery" className="w-full h-32 object-cover" />
-            <button onClick={() => handleImageDelete(image.id)} className="absolute top-0 right-0 bg-red-500 text-white p-1">Delete</button>
-          </div>
-        ))}
+    <div className="flex flex-col">
+      {/* Upload section */}
+      <div className="flex-1 bg-white p-4 lg:px-12">
+        <UploadSection />
+      </div>
+      {/* Gallery section */}
+      <div className="border-t border-[#E8E9ED] pt-4 lg:pt-10">
+        <Gallery images={images} onDelete={handleImageDelete} />
       </div>
     </div>
   );
 };
 
-export default Gallery;
+export default GalleryUpload;
