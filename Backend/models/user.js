@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const Joi = require("joi");
 const passwordComplexity = require("joi-password-complexity");
+const JWTPRIVATEKEY = "Wisdom(2704)00110011";
 
 const userSchema = new mongoose.Schema({
     firstName: { type: String, required: true },
@@ -11,7 +12,8 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.methods.generateAuthToken = function () {
-    const token = jwt.sign({ _id: this._id }, process.env.JWTPRIVATEKEY, { expiresIn: "1d" });
+    //const token = jwt.sign({ _id: this._id }, process.env.JWTPRIVATEKEY, { expiresIn: "1d" });
+    const token = jwt.sign({ _id: this._id }, JWTPRIVATEKEY, { expiresIn: "1d" });
     return token;
 }
 

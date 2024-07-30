@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useCallback, useReducer } from 'react';
+import React, { useState, useEffect, useCallback, useReducer, useContext } from 'react';
 import Modal from 'react-modal';
 import { FaEnvelope, FaApple, FaUser } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import { MdOutlineVpnKey } from 'react-icons/md';
 import classNames from 'classnames';
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
 
 // Initial state for form inputs
 const initialState = {
@@ -50,6 +52,8 @@ const InputField = ({ label, type, icon: Icon, value, onChange }) => (
 const LoginSignupModal = ({ isOpen, onClose }) => {
   const [action, setAction] = useState('Sign In'); // Current action (Sign In or Sign Up)
   const [state, dispatch] = useReducer(reducer, initialState); // Form state management
+  const { isLoggedIn, setIsLoggedIn } = useContext(UserContext);
+  const navigate = useNavigate();
 
   // Handle keyboard events (Escape to close, Arrow keys for navigation)
   const handleKeyDown = useCallback(
@@ -76,53 +80,60 @@ const LoginSignupModal = ({ isOpen, onClose }) => {
   }, [isOpen, handleKeyDown]);
 
   // Handle form submission (currently does nothing)
-  const handleSubmit = useCallback(async(event) => {
+  const handleSubmit = useCallback(async (event) => {
     event.preventDefault();
 
     const url = action === 'Sign In' ? 'http://localhost:8080/api/auth' : 'http://localhost:8080/api/users';
-    
+
     const payload = {
-      email: state.email,
-      password: state.password,
+        email: state.email,
+        password: state.password,
     };
-    
+
     if (action === 'Sign Up') {
-      payload.firstname = state.firstname;
-      payload.lastname = state.lastname;
+        payload.firstName = state.firstname;
+        payload.lastName = state.lastname;
     }
-    
+
     try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        });
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
+        if (!response.ok) {
+            const errorData = await response.json(); // Parse the error response
+            console.error('Response status:', response.status);
+            console.error('Response status text:', response.statusText);
+            console.error('Error details:', errorData);
+            throw new Error('Network response was not ok');
+        }
 
-      const data = await response.json();
-      console.log('Success:', data);
+        const data = await response.json();
+        setIsLoggedIn(true);
+        console.log('Success:', data);
 
-      if (action === 'Sign In') {
-        // Handle successful login (e.g., save token, redirect, etc.)
-        console.log('Login Successful', data);
-      } else {
-        // Handle successful sign-up (e.g., show success message, reset form, etc.)
-        console.log('Sign Up Successful', data);
-      }
+        if (action === 'Sign In') {
+          setIsLoggedIn(true);
+          console.log(isLoggedIn);
+          navigate('/services'); // Redirect on successful login
+        } else {
+            console.log('Sign Up Successful', data);
+        }
 
-      onClose(); // Close the modal on success
+        onClose();
+        
     } catch (error) {
-      console.error('Error:', error);
-      // Error-handling (e.g., show error message)
+        console.error('Error:', error);
+        alert('An error occurred while processing your request. Please try again later.');
     }
-  }, [action, state, onClose]);
+}, [action, state, onClose, navigate, isLoggedIn, setIsLoggedIn]);
 
+  
   // const handleSubmit = useCallback((event) => {
   //   event.preventDefault();
   // }, []);
