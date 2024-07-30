@@ -117,7 +117,7 @@ const LoginSignupModal = ({ isOpen, onClose }) => {
         setIsLoggedIn(true);
         console.log('Success:', data);
 
-        if (action === 'Sign In') {
+        if (action === 'Sign In' || 'Login') {
           setIsLoggedIn(true);
           console.log(isLoggedIn);
           navigate('/services'); // Redirect on successful login
