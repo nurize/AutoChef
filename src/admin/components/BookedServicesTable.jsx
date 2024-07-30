@@ -31,7 +31,7 @@ const BookedServicesTable = ({ bookedServices }) => {
             </th>
 
             {/* Status */}
-            <th className="bg-[#F5F6F8] py-2 px-2 md:px-4 font-semibold text-center">
+            <th className="bg-[#F5F6F8] py-2 px-2 md:px-4 font-semibold md:text-left">
               Status
             </th>
 
