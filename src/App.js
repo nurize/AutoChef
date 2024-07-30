@@ -52,7 +52,7 @@ const AdminLayout = () => {
   return (
     <div className="flex">
       <AdminSidebar />
-      <div className="flex-1 bg-[#F9FAFC] ml-20 lg:ml-72">
+      <div className="flex-1 bg-[#F9FAFC] ml-16 sm:ml-20 lg:ml-72">
         <Routes>
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="booked-services" element={<AdminBookedServices />} />
