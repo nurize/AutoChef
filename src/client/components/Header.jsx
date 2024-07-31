@@ -1,15 +1,17 @@
-import { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import Button from './BookButton';
+import { FaUserCircle } from 'react-icons/fa';
+import { UserContext } from '../context/UserContext'; // Importing the UserContext
+import LoginSignupButton from './LoginSignUpButton'; // Importing a custom button component
 
 const Header = () => {
-  // State to manage mobile menu visibility
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false); // State to manage the mobile menu's open/close status
+  const { isLoggedIn } = useContext(UserContext); // Getting the login status from the context
 
-  // Toggle mobile menu open/closed
+  // Function to toggle the mobile menu
   const toggleMenu = () => setIsOpen(!isOpen);
 
-  // Navigation menu items
+  // Array of navigation menu items
   const menuItems = [
     { path: '/', label: 'Home' },
     { path: '/services', label: 'Services' },
@@ -19,24 +21,23 @@ const Header = () => {
   ];
 
   return (
-    <header className="bg-black text-white p-2 fixed top-0 left-0 right-0 z-30">
+    <header className="bg-black text-white px-2 py-4 fixed top-0 left-0 right-0 z-30">
       <nav className="container mx-auto flex justify-between items-center">
-        {/* Logo and site name */}
         <div className="text-xl font-bold flex items-center">
-          <NavLink to='/' className='flex items-center font-serif'>
+          <NavLink to="/" className="flex items-center font-serif">
             <img 
               src={require('../assets/auto-chef-logo.png')} 
-              alt='logo' 
-              className='ml-4 mr-2 w-16 h-10'
+              alt="logo" 
+              className="ml-4 mr-2 w-16 h-10"
             />
-            <div className='hidden md:block font-thin'>
-              Auto<span className='text-red700'>Chef</span>
+            <div className="hidden lg:block font-thin">
+              Auto<span className="text-red-700">Chef</span>
             </div>
           </NavLink>
         </div>
 
-        {/* Mobile menu toggle button */}
         <div className="md:hidden">
+          {/* Button to toggle the mobile menu */}
           <button onClick={toggleMenu} className="focus:outline-none">
             <svg
               className="w-6 h-6"
@@ -54,35 +55,53 @@ const Header = () => {
           </button>
         </div>
 
-        {/* Navigation links */}
+        {/* Navigation menu, conditionally rendered based on isOpen state */}
         <ul className={`md:flex md:flex-row md:space-x-4 gap-4 ${isOpen ? 'block' : 'hidden'} md:block absolute md:relative top-full left-0 w-full md:w-auto bg-black md:bg-transparent`}>
           {menuItems.map((item, index) => (
             <li key={index} className="md:border-none">
               <NavLink 
                 to={item.path} 
-                className={({ isActive }) => `hover:text-red-700 block md:inline py-2 md:py-0 px-4 md:px-0 ${isActive ? 'text-red-700 fontbold' : ''}`}
+                className={({ isActive }) => `hover:text-red-700 block md:inline py-2 md:py-0 px-4 md:px-0 ${isActive ? 'text-red-700 font-bold' : ''}`}
               >
                 {item.label}
               </NavLink>
             </li>
           ))}
-          {/* Mobile-only Book Now button */}
-          {isOpen && (
+          {/* Show login/signup buttons only on mobile and if not logged in */}
+          {isOpen && !isLoggedIn && (
             <li className="md:hidden">
-              <Button 
-                styleProp="w-full bg-red-600 px-6 py-3 text-lg font-semibold hover:bg-red-700 transition duration-300 mt-4 md:mt-0" 
-                textProp="Book Now" 
+              <LoginSignupButton 
+                styleProp="w-[90%] mx-auto bg-white text-red-600 px-6 py-3 text-lg font-semibold hover:bg-red-700 transition duration-300 mt-4 md:mt-0" 
+                textProp="Sign In" 
+              />
+              <LoginSignupButton 
+                styleProp="w-[90%] bg-red-600 px-6 py-3 text-lg font-semibold hover:bg-red-700 transition duration-300 mt-4 md:mt-0" 
+                textProp="Sign Up" 
               />
             </li>
           )}
         </ul>
 
-        {/* Desktop-only Book Now button */}
-        <div className="hidden md:block">
-          <Button 
-            styleProp="bg-red-600 px-6 py-3 text-lg font-semibold rounded hover:bg-red-700 transition duration-300" 
-            textProp="Book Now" 
-          />
+        <div className="hidden md:flex items-center">
+          {/* Show profile icon or login/signup buttons based on login status */}
+          {isLoggedIn ? (
+            <div className="flex items-center">
+              <NavLink to="/profile" className="text-white">
+                <FaUserCircle className="text-3xl text-white mr-4" />
+              </NavLink>
+            </div>
+          ) : (
+            <div className="flex items-center">
+              <LoginSignupButton 
+                styleProp="bg-white text-red-600 px-3 py-2 text-md mr-3 font-semibold rounded-lg hover:bg-red-700 transition duration-300 hover:text-white" 
+                textProp="Sign In" 
+              />
+              <LoginSignupButton 
+                styleProp="bg-red-600 px-3 py-2 text-md font-semibold rounded-lg hover:bg-red-700 transition duration-300" 
+                textProp="Sign Up" 
+              />
+            </div>
+          )}
         </div>
       </nav>
     </header>

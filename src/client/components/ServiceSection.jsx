@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useService } from '../context/ServiceContext';
 import Button from './BookButton';
 import { useNavigate } from 'react-router-dom';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 // Component for the services section
 const ServicesSection = ({ id, title, description, points, image, icon, alignRight }) => {
@@ -28,8 +29,8 @@ const ServicesSection = ({ id, title, description, points, image, icon, alignRig
         {/* Service title with icon */}
         <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl pb-4 md:pb-6 lg:pb-8 font-bold mb-4 flex italic items-center">
           {title} 
-          <span className="ml-2 text-xl h-20 w-20" role="img" aria-label="icon">
-            <img src={icon} alt="service icon" />
+          <span>
+            <Icon icon={icon} alt="service icon" className='ml-2 text-xl h-20 w-20' />
           </span>
         </h2>
         {/* Service description */}

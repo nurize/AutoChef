@@ -69,7 +69,7 @@ const FeaturedGallery = () => {
       {/* Slider component for featured gallery */}
       <Slider {...settings}>
         {featuredGallery.map((image, index) => (
-          <div key={index} className="px-2 transition-transform duration-500 ease-in-out transform hover:scale-105">
+          <div key={index} className="px-2 ">
             <div className="relative overflow-hidden rounded-3xl shadow-lg">
               <img
                 src={image}
