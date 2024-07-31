@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useCallback, useReducer } from 'react';
+import React, { useState, useCallback, useReducer, useContext } from 'react';
 import Modal from 'react-modal';
 import { FaEnvelope, FaApple, FaUser } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import { MdOutlineVpnKey } from 'react-icons/md';
 import classNames from 'classnames';
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
 
 // Initial state for form inputs
 const initialState = {
@@ -32,17 +34,18 @@ function reducer(state, action) {
 }
 
 // Component for individual input fields with icons
-const InputField = ({ label, type, icon: Icon, value, onChange }) => (
+const InputField = ({ label, type, icon: Icon, value, onChange, error }) => (
   <div className="mb-4">
     <label className="block text-gray-700">{label}</label>
     <div className="relative">
       <Icon className="absolute left-3 top-4 text-gray-400" />
       <input
         type={type}
-        className="w-full p-3 pl-10 border border-gray-300 rounded-lg text-black"
+        className={`w-full p-3 pl-10 border ${error ? 'border-red-500' : 'border-gray-300'} rounded-lg text-black`}
         value={value}
         onChange={onChange}
       />
+      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
     </div>
   </div>
 );
@@ -50,40 +53,98 @@ const InputField = ({ label, type, icon: Icon, value, onChange }) => (
 const LoginSignupModal = ({ isOpen, onClose, initialAction }) => {
   const [action, setAction] = useState(initialAction || 'Sign In'); // Current action (Sign In or Sign Up)
   const [state, dispatch] = useReducer(reducer, initialState); // Form state management
+  const [errors, setErrors] = useState({});
+  const { setIsLoggedIn } = useContext(UserContext);
+  const navigate = useNavigate();
 
-  // Handle keyboard events (Escape to close, Arrow keys for navigation)
-  const handleKeyDown = useCallback(
-    (event) => {
-      if (event.key === 'Escape') {
-        onClose();
-      } else if (event.key === 'ArrowLeft') {
-        // Handle previous action if applicable
-      } else if (event.key === 'ArrowRight') {
-        // Handle next action if applicable
-      }
-    },
-    [onClose]
-  );
-
-  // Set up and clean up keyboard event listeners
-  useEffect(() => {
-    if (isOpen) {
-      document.addEventListener('keydown', handleKeyDown);
+  // Validate form inputs
+  const validate = () => {
+    const newErrors = {};
+    if (!state.email) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(state.email)) {
+      newErrors.email = 'Please enter a valid email address';
     }
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isOpen, handleKeyDown]);
+    if (!state.password) {
+      newErrors.password = 'Password is required';
+    } else if (state.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+    if (action === 'Sign Up') {
+      if (!state.firstname) {
+        newErrors.firstname = 'First name is required';
+      }
+      if (!state.lastname) {
+        newErrors.lastname = 'Last name is required';
+      }
+    }
+    return newErrors;
+  };
 
-  // Handle form submission (currently does nothing)
-  const handleSubmit = useCallback((event) => {
+  // Handle form submission
+  const handleSubmit = useCallback(async (event) => {
     event.preventDefault();
-  }, []);
+    const formErrors = validate();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return;
+    }
+    setErrors({});
+
+    const url = action === 'Sign In' ? 'http://localhost:8080/api/auth' : 'http://localhost:8080/api/users';
+
+    const payload = {
+      email: state.email,
+      password: state.password,
+    };
+
+    if (action === 'Sign Up') {
+      payload.firstName = state.firstname;
+      payload.lastName = state.lastname;
+    }
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json(); // Parse the error response
+        console.error('Response status:', response.status);
+        console.error('Response status text:', response.statusText);
+        console.error('Error details:', errorData);
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      setIsLoggedIn(true);
+      console.log('Success:', data);
+
+      if (action === 'Sign In' || action === 'Login') {
+        setIsLoggedIn(true);
+        navigate('/services'); // Redirect on successful login
+      } else {
+        console.log('Sign Up Successful', data);
+      }
+
+      onClose();
+
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred while processing your request. Please try again later.');
+    }
+  }, [action, state, onClose, navigate, setIsLoggedIn]);
 
   // Toggle between Sign In and Sign Up forms
   const toggleAction = useCallback(() => {
     setAction((prevAction) => (prevAction === 'Sign In' ? 'Sign Up' : 'Sign In'));
     dispatch({ type: 'RESET' }); // Reset form fields on action change
+    setErrors({});
   }, []);
 
   return (
@@ -107,6 +168,7 @@ const LoginSignupModal = ({ isOpen, onClose, initialAction }) => {
               icon={FaUser}
               value={state.firstname}
               onChange={(e) => dispatch({ type: 'SET_FIRSTNAME', payload: e.target.value })}
+              error={errors.firstname}
             />
             <InputField
               label="Last Name"
@@ -114,6 +176,7 @@ const LoginSignupModal = ({ isOpen, onClose, initialAction }) => {
               icon={FaUser}
               value={state.lastname}
               onChange={(e) => dispatch({ type: 'SET_LASTNAME', payload: e.target.value })}
+              error={errors.lastname}
             />
           </>
         )}
@@ -123,6 +186,7 @@ const LoginSignupModal = ({ isOpen, onClose, initialAction }) => {
           icon={FaEnvelope}
           value={state.email}
           onChange={(e) => dispatch({ type: 'SET_EMAIL', payload: e.target.value })}
+          error={errors.email}
         />
         <InputField
           label="Password"
@@ -130,28 +194,16 @@ const LoginSignupModal = ({ isOpen, onClose, initialAction }) => {
           icon={MdOutlineVpnKey}
           value={state.password}
           onChange={(e) => dispatch({ type: 'SET_PASSWORD', payload: e.target.value })}
+          error={errors.password}
         />
         {action === 'Sign In' && (
           <div className="text-right mt-2">
             <a href="https://support.google.com/accounts/answer/41078?hl=en&co=GENIE.Platform%3DAndroid" className="text-red-600 text-sm">Forgot password</a>
           </div>
         )}
-        <button type="submit" className="bg-red-600 text-white w-full py-2 rounded-lg my-6">{action}</button>
+        <button type="submit" className="bg-red-600 hover:bg-[#c32222] active:bg-red-700 text-white w-full py-2 rounded-lg my-6">{action}</button>
       </form>
-      {/* <div className="flex items-center mb-6">
-        <div className="flex-grow border-t border-gray-300"></div>
-        <span className="mx-2 text-gray-500">Or continue with</span>
-        <div className="flex-grow border-t border-gray-300"></div>
-      </div>
-      <div className="flex justify-center space-x-4 mb-6">
-        <button className="bg-white border border-gray-300 p-2 rounded-full">
-          <FcGoogle className="text-2xl" />
-        </button>
-        <button className="bg-white text-black border border-gray-300 p-2 rounded-full">
-          <FaApple className="text-2xl" />
-        </button>
-      </div> */}
-      <p className="text-center text-gray-500 mt-4">
+      <p className="text-center text-gray-500 mt-2">
         {action === 'Sign In' ? "Don't" : 'Already'} have an account? 
         <button 
           onClick={toggleAction} 
