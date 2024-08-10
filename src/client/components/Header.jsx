@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 import LoginSignupModal from './LoginSignupModal';
@@ -7,96 +7,88 @@ import LoginSignupButton from './LoginSignUpButton';
 import Button from './BookButton';
 import { Icon } from '@iconify/react';
 
-// Custom hook to detect clicks outside a given element
-const useOutsideClick = (ref, callback) => {
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (ref.current && !ref.current.contains(event.target)) {
-        callback();
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [ref, callback]);
-};
-
 const Header = () => {
-  // State management for toggling UI elements and modals
-  const [isOpen, setIsOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [modals, setModals] = useState({
-    loginSignup: false,
-    bookingHistory: false,
-  });
-
-  // Ref to dropdown and menu elements
+  const [isOpen, setIsOpen] = useState(false);  // State for menu toggle
+  const [bgColor, setBgColor] = useState('bg-transparent');  // State for header background color
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);  // State for user dropdown toggle
+  const [isModalOpen, setIsModalOpen] = useState(false);  // State for login/signup modal
+  const [isBookingHistoryModalOpen, setIsBookingHistoryModalOpen] = useState(false);  // State for booking history modal
   const dropdownRef = useRef(null);
   const menuRef = useRef(null);
-
-  // Context and navigation hooks
   const { isLoggedIn, setIsLoggedIn } = useContext(UserContext);
   const navigate = useNavigate();
 
-  // Determine background color based on scroll position, memoized for performance
-  const bgColor = useMemo(() => (window.scrollY > 50 ? 'bg-black' : 'bg-transparent'), []);
+  // Toggle mobile menu visibility
+  const toggleMenu = () => setIsOpen(!isOpen);
 
-  // Menu items array, memoized for performance
-  const menuItems = useMemo(() => [
+  // Menu items to be displayed in the navigation menu
+  const menuItems = [
     { path: '/', label: 'Home' },
     { path: '/services', label: 'Services' },
     { path: '/about', label: 'About' },
     { path: '/gallery', label: 'Gallery' },
     { path: '/contact', label: 'Contact Us' },
-  ], []);
+  ];
 
-  // Toggle the mobile menu
-  const toggleMenu = useCallback(() => setIsOpen(prev => !prev), []);
+  // Change header background color on scroll
+  const handleScroll = () => {
+    setBgColor(window.scrollY > 50 ? 'bg-black' : 'bg-transparent');
+  };
 
-  // Toggle the user dropdown menu
-  const toggleDropdown = useCallback(() => {
-    setIsDropdownOpen(prev => !prev);
+  // Attach scroll event listener on mount, detach on unmount
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
-  // Close dropdown or menu when clicking outside
-  useOutsideClick(dropdownRef, () => setIsDropdownOpen(false));
-  useOutsideClick(menuRef, () => setIsOpen(false));
+  // Toggle user dropdown visibility
+  const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
-  // Handle user icon click to toggle dropdown or open login/signup modal
+  // Handle clicks outside of dropdown and menu to close them
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsDropdownOpen(false);
+    }
+    if (menuRef.current && !menuRef.current.contains(event.target) && isOpen) {
+      setIsOpen(false);
+    }
+  };
+
+  // Attach document click listener on mount, detach on unmount
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
+  // Handle user icon click: toggle dropdown or open login/signup modal
   const handleUserIconClick = () => {
-    if (isLoggedIn) {
-      toggleDropdown();
-    } else {
-      setModals({ ...modals, loginSignup: true });
-    }
+    isLoggedIn ? toggleDropdown() : setIsModalOpen(true);
   };
 
-  // Handle cart icon click to open booking history modal or login/signup modal
+  // Handle user icon click: toggle dropdown or open login/signup modal
   const handleCartIconClick = () => {
-    if (isLoggedIn) {
-      openBookingHistoryModal();
-    } else {
-      setModals({ ...modals, loginSignup: true });
-    }
+    isLoggedIn ? openBookingHistoryModal() : setIsModalOpen(true);
   };
 
-  // Close Login/Signup modal
-  const closeModal = () => setModals({ ...modals, loginSignup: false });
+  // Close login/signup modal
+  const closeModal = () => setIsModalOpen(false);
 
-  // Close Booking History modal
-  const closeBookingHistoryModal = () => setModals({ ...modals, bookingHistory: false });
+  // Close booking history modal
+  const closeBookingHistoryModal = () => setIsBookingHistoryModalOpen(false);
 
-  // Open Booking History modal
-  const openBookingHistoryModal = () => setModals({ ...modals, bookingHistory: true });
+  // Open booking history modal
+  const openBookingHistoryModal = () => setIsBookingHistoryModalOpen(true);
 
   // Handle user logout
   const handleLogout = async () => {
     try {
       const response = await fetch('http://localhost:8080/api/logout', {
         method: 'POST',
-        credentials: 'include', // Include cookies with the request
+        credentials: 'include',  // Include cookies with the request
       });
 
       if (response.ok) {
@@ -113,7 +105,7 @@ const Header = () => {
   return (
     <header className={`${bgColor} text-white px-4 lg:px-16 py-4 fixed top-0 left-0 right-0 z-30 transition-colors duration-300`}>
       <nav className="flex justify-between items-center">
-        {/* Logo and Menu button */}
+        {/* Left section: Menu button and welcome message */}
         <div className='flex items-center'>
           <button onClick={toggleMenu} className="focus:outline-none mr-4 transition duration-300">
             {isOpen ? (
@@ -128,7 +120,7 @@ const Header = () => {
           <Link to='/' className='hidden lg:block'>Welcome to the future of auto repair!</Link>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile menu items */}
         <ul ref={menuRef} className={`absolute top-full left-0 h-screen bg-black w-4/5 sm:w-3/5 md:w-1/2 lg:w-1/3 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-500 ease-in-out pl-4 lg:pl-16`}>
           {menuItems.map((item, index) => (
             <li key={index}>
@@ -142,7 +134,7 @@ const Header = () => {
           ))}
         </ul>
 
-        {/* User Icon, Cart Icon, and Buttons */}
+        {/* Right section: User dropdown, booking button, and logo */}
         <div className='flex'>
           <div className='flex items-center'>
             <div className='relative' ref={dropdownRef}>
@@ -189,7 +181,7 @@ const Header = () => {
             ) : (
               <>
                 <LoginSignupButton
-                  styleProp="px-3 py-2 text-md mr-3 border-red-700 font-semibold hover:text-white transition-colors duration-300 hover:bg-red-700"
+                  styleProp="px-3 py-2 text-md mr-3 border-red-700 font-semibold  hover:text-white transition-colors duration-300 hover:bg-red-700"
                   textProp="Sign In"
                 />
                 <LoginSignupButton
@@ -210,9 +202,9 @@ const Header = () => {
         </div>
       </nav>
 
-      {/* Modals */}
-      <LoginSignupModal isOpen={modals.loginSignup} onClose={closeModal} />
-      <BookingHistoryModal isOpen={modals.bookingHistory} onClose={closeBookingHistoryModal} />
+      {/* Modals for login/signup and booking history */}
+      <LoginSignupModal isOpen={isModalOpen} onClose={closeModal} />
+      <BookingHistoryModal isOpen={isBookingHistoryModalOpen} onClose={closeBookingHistoryModal} />
     </header>
   );
 };
