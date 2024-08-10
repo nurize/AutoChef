@@ -1,32 +1,23 @@
+import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import serviceData from '../data/serviceData';
 import locationIcon from '../assets/location.png';
 import emailIcon from '../assets/email.png';
 import phoneIcon from '../assets/phone.png';
-import instagramIcon from '../assets/instagram.png';
-import twitterIcon from '../assets/twitter.png';
-import tiktokIcon from '../assets/tiktok.webp';
-import snapchatIcon from '../assets/snapchat.png';
-
-// ContactInfo component displays contact information with an icon
-const ContactInfo = ({ href, imgSrc, altText, children }) => (
-  <div className="flex items-center space-x-4 my-4 md:mb-0">
-    <div className="bg-red-500 rounded-full p-2">
-      <a href={href} target="_blank" rel="noopener noreferrer">
-        <img src={imgSrc} alt={altText} className="w-5 h-5 md:w-9 md:h-9" />
-      </a>
-    </div>
-    <span className="hidden md:block">{children}</span>
-  </div>
-);
+import ContactInfo from './ContactInfo';
+import SocialIcons from './SocialIcons';
 
 // Footer component displays the footer section of the website
 const Footer = () => {
+  // Memoize service data to prevent re-rendering unless the data changes
+  const services = useMemo(() => serviceData, []);
+
   return (
     <>
       {/* Container for contact information section */}
       <div className="relative container mx-auto">
-        <div className="relative flex md:flex-row justify-around items-center bg-neutral-800 md:w-11/12 lg:w-4/5 py-4 md:py-8 lg:py-10 rounded-2xl mx-4 md:mx-auto text-white mb-8 top-24 md:top-24">
+        <div className="relative flex md:flex-row justify-around items-center bg-neutral-800 md:w-11/12 lg:w-4/5 py-4 md:py-8 lg:py-10 rounded-2xl mx-4 md:mx-auto text-white mb-8 top-16 md:top-24">
+          {/* Contact Information using reusable component */}
           <ContactInfo href="https://maps.app.goo.gl/Kdr4PQ27nfd6ukvJ7" imgSrc={locationIcon} altText="Location">
             Achimota Mile 7
           </ContactInfo>
@@ -40,11 +31,11 @@ const Footer = () => {
       </div>
 
       {/* Main footer section */}
-      <footer className="bg-black text-white pb-2 pt-32 md:pt-40 lg:pt-48 px-4 md:px-16 w-full">
+      <footer className="bg-black text-white pb-2 pt-32 md:pt-40 lg:pt-48 px4 px-16 w-full">
         <div className="container mx-auto">
-          <div className="flex flex-col md:flex-row md:gap-8 text-center md:text-left lg:justify-between mb-16">
+          <div className="flex flex-col flex-wrap sm:flex-row md:gap-8 text-center sm:text-left justify-between mb-16">
             {/* Logo and description */}
-            <div className="w-full md:w-2/5 mb-8 md:mb-0">
+            <div className="w-full sm:w-1/2 md:w-2/5 mb-8 md:mb-0">
               <div className="text-2xl font-bold">
                 <Link to="/">Auto<span className="text-red-700">Chef</span></Link>
               </div>
@@ -53,7 +44,7 @@ const Footer = () => {
                 We know how much you value your vehicle.
               </p>
             </div>
-            {/* Useful links section */}
+            {/* Useful Links section */}
             <div className="mb-8 md:mb-0">
               <h3 className="font-bold mb-4">Useful Links</h3>
               <ul>
@@ -67,7 +58,7 @@ const Footer = () => {
             <div className="mb-8 md:mb-0">
               <h3 className="font-bold mb-4">Our Services</h3>
               <ul>
-                {serviceData.map(service => (
+                {services.map(service => (
                   <li key={service.title}><Link to={`/services#${service.path}`}>{service.title}</Link></li>
                 ))}
               </ul>
@@ -85,23 +76,9 @@ const Footer = () => {
           </div>
 
           {/* Footer bottom section */}
-          <div className="flex flex-col md:flex-row justify-between items-center border-t-[0.5px] border-stone-600 py-4">
+          <div className="flex flex-col md:flex-row justify-between items-center border-t-[0.5px] text-gray-200 border-stone-600 py-4">
             <p className="text-center mb-4 md:mb-0">© 2024 AutoChef. All rights reserved.</p>
-            <div className="flex justify-center items-center space-x-4">
-              {/* Social media icons */}
-              <a href="https://instagram.com/autochef_gh" target="_blank" rel="noopener noreferrer">
-                <img src={instagramIcon} alt="Instagram" className="w-9 h-9" />
-              </a>
-              <a href="https://twitter.com/autochef_gh" target="_blank" rel="noopener noreferrer">
-                <img src={twitterIcon} alt="Twitter" className="w-9 h-9" />
-              </a>
-              <a href="https://tiktok.com/@autochef_gh" target="_blank" rel="noopener noreferrer">
-                <img src={tiktokIcon} alt="TikTok" className="w-9 h-9 border rounded-lg" />
-              </a>
-              <a href="https://snapchat.com/add/am_oreen" target="_blank" rel="noopener noreferrer">
-                <img src={snapchatIcon} alt="Snapchat" className="w-9 h-9" />
-              </a>
-            </div>
+            <SocialIcons />
           </div>
         </div>
       </footer>
