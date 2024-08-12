@@ -70,7 +70,7 @@ const FeaturedGallery = () => {
       <Slider {...settings}>
         {featuredGallery.map((image, index) => (
           <div key={index} className="px-2 ">
-            <div className="relative overflow-hidden rounded-3xl shadow-lg">
+            <div className="relative bg-gray-300 overflow-hidden rounded-3xl">
               <img
                 src={image}
                 alt={`Gallery item ${index + 1}`}

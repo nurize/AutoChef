@@ -6,6 +6,7 @@ import BookingHistoryModal from './BookingHistoryModal';
 import LoginSignupButton from './LoginSignUpButton';
 import Button from './BookButton';
 import { Icon } from '@iconify/react';
+import menuItems from '../data/menuItems';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);  // State for menu toggle
@@ -20,15 +21,6 @@ const Header = () => {
 
   // Toggle mobile menu visibility
   const toggleMenu = () => setIsOpen(!isOpen);
-
-  // Menu items to be displayed in the navigation menu
-  const menuItems = [
-    { path: '/', label: 'Home' },
-    { path: '/services', label: 'Services' },
-    { path: '/about', label: 'About' },
-    { path: '/gallery', label: 'Gallery' },
-    { path: '/contact', label: 'Contact Us' },
-  ];
 
   // Change header background color on scroll
   const handleScroll = () => {
