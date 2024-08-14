@@ -1,17 +1,14 @@
-// src/components/Header.js
-import React from 'react';
-
 const Header = () => {
   return (
     <div className="flex justify-between items-center py-4 px-6 bg-white my-6 border border-[#E8E9ED] rounded-lg">
       <div>
-        <div className="text-xl font-semibold">Admin Central</div>
-        <div className="text-gray-500">
-            Monitor, manage, and maximize your auto shop's potential
-        </div>
+        <h1 className="text-xl font-semibold">Admin Central</h1>
+        <p className="text-gray-500 hidden md:block">
+          Monitor, manage, and maximize your auto shop's potential
+        </p>
       </div>
 
-      <div className="flex items-center space-x-4">
+      <div className="lg:flex items-center space-x-4 hidden">
         <div className="flex items-center space-x-2">
           <img
             src="https://via.placeholder.com/40"
