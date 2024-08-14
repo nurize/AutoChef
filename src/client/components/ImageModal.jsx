@@ -96,7 +96,7 @@ const ImageModal = ({ isOpen, image, onClose, onPrevious, onNext }) => {
         onClick={(e) => { e.stopPropagation(); onPrevious(); }}
         className="absolute group z-10 left-5 text-white text-2xl px-1 xl:px-5 py-5 md:py-20 2xl:py-32"
       >
-        <Icon icon='teenyicons:left-outline' className='bg-gray-700 group-hover:bg-gray-600 group-active:bg-gray-500 p-3 w-10 h-10 md:w-11 md:h-11 rounded-full'/>
+        <Icon icon='teenyicons:left-outline' className='bg-gray-300 text-gray-800 group-hover:bg-gray-400 group-active:bg-gray-300 p-3 w-10 h-10 md:w-11 md:h-11 rounded-full transition duration-300'/>
       </button>
 
       {/* Loading spinner */}
@@ -125,15 +125,15 @@ const ImageModal = ({ isOpen, image, onClose, onPrevious, onNext }) => {
         onClick={(e) => { e.stopPropagation(); onNext(); }}
         className="absolute group z-10 right-5 text-white text-2xl px-1 xl:px-5 py-5 md:py-20 2xl:py-32"
       >
-        <Icon icon='teenyicons:right-outline' className='bg-gray-700 group-hover:bg-gray-600 group-active:bg-gray-500 p-3 w-10 h-10 md:w-11 md:h-11 rounded-full'/>
+        <Icon icon='teenyicons:right-outline' className='bg-gray-300 text-gray-800 group-hover:bg-gray-400 group-active:bg-gray-300 p-3 w-10 h-10 md:w-11 md:h-11 rounded-full transition duration-300'/>
       </button>
 
       {/* Button to close the modal */}
       <button
-        className="absolute top-5 right-5 text-white text-2xl"
+        className="absolute top-5 right-5 text-white text-2xl pl-3 pb-3"
         onClick={(e) => { e.stopPropagation(); onClose(); }}
       >
-        &times;
+        <Icon icon='formkit:close' className='w-7 h-7' />
       </button>
     </div>
   );

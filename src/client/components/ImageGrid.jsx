@@ -34,7 +34,7 @@ const ImageGrid = ({ images, onImageClick }) => {
                 alt={`Gallery item ${index + 1}`}
                 className={classNames(
                   isUserGallery ? "h-full" : "h-52",
-                  "w-full object-cover bg-slate-400 transition-transform duration-500 transform hover:scale-110 cursor-pointer"
+                  "w-full object-cover bg-slate-100 transition-transform duration-500 transform hover:scale-110 cursor-pointer"
                 )}
                 loading="lazy"
               />

@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import gallery from '../data/gallery';
 import ImageModal from './ImageModal';
 import ImageGrid from './ImageGrid';
@@ -7,6 +8,9 @@ import Pagination from './Pagination';
 const IMAGES_PER_PAGE = 10;
 
 const Gallery = () => {
+  const location = useLocation();
+  const isGalleryPage = location.pathname === '/gallery';
+  
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -49,17 +53,19 @@ const Gallery = () => {
     };
   }, [currentPage, handlePageChange]);
 
-  const startIndex = (currentPage - 1) * IMAGES_PER_PAGE;
-  const paginatedImages = gallery.slice(startIndex, startIndex + IMAGES_PER_PAGE);
+  // If on the gallery page, show all images; otherwise, paginate them.
+  const imagesToShow = isGalleryPage ? gallery : gallery.slice((currentPage - 1) * IMAGES_PER_PAGE, currentPage * IMAGES_PER_PAGE);
 
   return (
     <>
-      <ImageGrid images={paginatedImages} onImageClick={handleImageClick} />
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-      />
+      <ImageGrid images={imagesToShow} onImageClick={handleImageClick} />
+      {!isGalleryPage && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
       {selectedIndex !== null && (
         <ImageModal
           isOpen={selectedIndex !== null}
