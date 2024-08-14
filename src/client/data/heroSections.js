@@ -2,7 +2,7 @@ const heroSections = [
   {
     page: '/',
     backgroundImage: require('../assets/Hero-bg-Image.png'),
-    title: 'Expert Auto Repair for All Makes and Models',
+    title: 'Autochef',
     description: 'At The Auto Chef, we blend meticulous craftsmanship with innovative techniques to transform your vehicle into a masterpiece. Specializing in high-end automobile restoration and facelifts, our expert team ensures every detail is perfected.',
   },
   {
