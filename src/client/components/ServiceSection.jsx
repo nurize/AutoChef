@@ -6,16 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-// Animation variants for the container
-const containerVariants = {
-  hidden: { opacity: 0, y: 50 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, delay: 0.2 },
-  },
-};
-
 // Text animation variants for titles, descriptions, and points
 const textVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -62,7 +52,11 @@ const ServicesSection = ({
           viewport={{ once: true, amount: 0.3 }}
         >
           {title}
-          <Icon icon={icon} alt="service icon" className="ml-2 h-10 w-10 sm:h-12 sm:w-12 md:h-16 md:w-16 lg:h-20 lg:w-20" />
+          <Icon
+            icon={icon}
+            alt="service icon"
+            className="ml-2 h-10 w-10 sm:h-12 sm:w-12 md:h-16 md:w-16 lg:h-20 lg:w-20"
+          />
         </motion.h2>
 
         {/* Animated description */}

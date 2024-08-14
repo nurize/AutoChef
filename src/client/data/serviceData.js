@@ -1,6 +1,6 @@
 const serviceData = [
   {
-    title: 'Auto Resprays',
+    title: 'Automobile Resprays',
     description: 'Revitalize your car’s appearance with our top-quality respray services. Whether you’re looking to restore your car’s original color or want a complete color change, our skilled technicians use the finest automotive paints and precision techniques to deliver a flawless finish.',
     points: [
       { title: 'Full Body Resprays', text: 'Complete color changes for a fresh new look.' },
@@ -8,8 +8,7 @@ const serviceData = [
       { title: 'Custom Paint Jobs', text: 'Unique designs and custom colors to make your car stand out.' },
     ],
     image: require('../assets/image4.png'), 
-    icon: require('../assets/respray_icon.png'),
-    iconRed: require('../assets/game-icons_car-key.png'),
+    icon: 'mdi:spray-bottle',
     path: 'auto-resprays',
   },
   {
@@ -21,8 +20,7 @@ const serviceData = [
       { title: 'Ceramic Coating', text: 'Provides long-lasting protection and a brilliant shine.' },
     ],
     image: require('../assets/DetailingBg.jpg'), 
-    icon: require('../assets/detailing-icon.png'),
-    iconRed: require('../assets/detailing-icon-red.png'),
+    icon: 'codicon:sparkle-filled',
     path: 'car-detailing',
   },
   {
@@ -34,8 +32,7 @@ const serviceData = [
       { title: 'Electrical Diagnostics', text: 'Advanced tools to identify and fix electrical problems quickly' },
     ],
     image: require('../assets/electricalBg.jpg'),
-    icon: require('../assets/electrical-icon.png'),
-    iconRed: require('../assets/electrical-icon-red.png'),
+    icon: 'uil:circuit',
     path: 'electrical-services',
   },
   {
@@ -47,8 +44,7 @@ const serviceData = [
       { title: 'Gloss Enhancement', text: ' Achieve a mirror-like finish with our polishing techniques' },
     ],
     image: require('../assets/paint-correctionBg.jpg'),
-    icon: require('../assets/paint-correction-icon.png'),
-    iconRed: require('../assets/paint-correction-icon-red.png'),
+    icon: 'fluent:paint-brush-sparkle-24-filled',
     path: 'paint-correction',
   },
   {
@@ -60,8 +56,7 @@ const serviceData = [
       { title: 'Panel Replacement', text: ' Replacing damaged panels to restore structural integrity.' },
     ],
     image: require('../assets/bodyworksBg.jpg'), 
-    icon: require('../assets/bodyworks-icon.png'),
-    iconRed: require('../assets/bodyworks-icon-red.png'),
+    icon: 'mdi:hammer-wrench',
     path: 'bodyworks',
   },
   {
@@ -73,8 +68,7 @@ const serviceData = [
       { title: 'Routine Maintenance', text: ' Regular services like oil changes, tire rotations, and inspections.' },
     ],
     image: require('../assets/mechanicBg.jpg'), 
-    icon: require('../assets/mechanic-icon.png'),
-    iconRed: require('../assets/mechanic-icon-red.png'),
+    icon: 'fluent:wrench-settings-24-filled',
     path: 'auto-mechanic',
   },
 ];
