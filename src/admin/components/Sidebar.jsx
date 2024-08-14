@@ -28,7 +28,7 @@ const Sidebar = () => {
             <li key={to}>
               <NavLink
                 to={to}
-                end
+                end={to === '/admin'} // Ensure `end` is applied only to the `/admin` route
                 className={({ isActive }) =>
                   `flex items-center justify-center lg:justify-start p-2 lg:py-3 lg:px-4 rounded-xl hover:bg-[#FFE5E5] mb-3 hover:text-[#DE0000] ${
                     isActive ? 'text-white bg-[#DE0000]' : ''
