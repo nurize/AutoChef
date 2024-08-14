@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 
 const BookingForm = ({ isloggedIn }) => {
-  // State to manage the visibility and booking confirmation status of the modal
+  // State to manage modal visibility and booking confirmation status
   const [modalState, setModalState] = useState({
     isOpen: false,
     isBookingConfirmed: false,
@@ -16,7 +16,18 @@ const BookingForm = ({ isloggedIn }) => {
     serviceInfo: '',
   });
 
-  // Handler for input field changes
+  // Disable background scrolling when any modal is open
+  useEffect(() => {
+    const isModalOpen = modalState.isOpen || modalState.isBookingConfirmed;
+    document.body.style.overflow = isModalOpen ? 'hidden' : '';
+
+    // Cleanup on component unmount or when modals close
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [modalState.isOpen, modalState.isBookingConfirmed]);
+
+  // Handler for form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
@@ -25,11 +36,9 @@ const BookingForm = ({ isloggedIn }) => {
     }));
   };
 
-  // Check if the contact number is valid
+  // Validate contact number format
   const isContactNumberValid = (contactNumber) => {
-    // Regex to allow numbers and some special characters
     const phoneRegex = /^[0-9()+\- ]+$/;
-    // Remove non-numeric characters for length check
     const numericContactNumber = contactNumber.replace(/[^0-9]/g, '');
     return (
       phoneRegex.test(contactNumber) &&
@@ -38,7 +47,7 @@ const BookingForm = ({ isloggedIn }) => {
     );
   };
 
-  // Check if all required fields are filled
+  // Check if the form is valid
   const isFormValid = () => {
     return (
       formData.fullName.trim() !== '' &&
@@ -48,7 +57,7 @@ const BookingForm = ({ isloggedIn }) => {
     );
   };
 
-  // Open the modal if the form is valid
+  // Open the confirmation modal
   const handleOpenModal = (e) => {
     e.preventDefault();
     if (isFormValid()) {
@@ -56,12 +65,12 @@ const BookingForm = ({ isloggedIn }) => {
     }
   };
 
-  // Confirm the booking and close the modal
+  // Confirm booking and close the first modal
   const handleConfirmBooking = () => {
     setModalState({ isOpen: false, isBookingConfirmed: true });
   };
 
-  // Close the modal
+  // Close the first modal
   const handleCloseModal = () => {
     setModalState({ ...modalState, isOpen: false });
   };
@@ -71,7 +80,7 @@ const BookingForm = ({ isloggedIn }) => {
     setModalState({ ...modalState, isBookingConfirmed: false });
   };
 
-  // Function to render input fields
+  // Reusable component to render input fields
   const renderInputField = (label, type, name, placeholder) => (
     <div className="flex-1">
       <label className="block text-sm font-medium text-gray-700">{label}</label>
@@ -80,14 +89,14 @@ const BookingForm = ({ isloggedIn }) => {
         name={name}
         value={formData[name]}
         onChange={handleInputChange}
-        className="mt-1 block w-full border border-gray-300 p-3 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
+        className="mt-1 block w-full border border-gray-300 p-3 rounded-md shadow-sm focus:outline focus:ring-green-500 sm:text-sm"
         placeholder={placeholder}
         required
       />
     </div>
   );
 
-  // Function to render modals
+  // Reusable component to render modals
   const renderModal = (isOpen, onRequestClose, title, content, actions) => (
     <Modal
       isOpen={isOpen}
@@ -110,17 +119,14 @@ const BookingForm = ({ isloggedIn }) => {
         {renderInputField('Contact Number', 'tel', 'contactNumber', 'Contact Number')}
 
         <div className="flex-1">
-          <label
-            className="block text-gray-700 text-sm font-medium mb-2"
-            htmlFor="service"
-          >
+          <label className="block text-gray-700 text-sm font-medium mb-2" htmlFor="service">
             Service
           </label>
           <select
             name="service"
             value={formData.service}
             onChange={handleInputChange}
-            className="appearance-none border border-gray-300 rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="appearance-none border border-gray-300 bg-gray-50 rounded w-full p-3 text-gray-700  leading-tight focus:outline-none focus:shadow-outline"
             id="service"
             required
           >
@@ -133,12 +139,13 @@ const BookingForm = ({ isloggedIn }) => {
             <option value="Auto Mechanic">Auto Mechanic</option>
           </select>
         </div>
+
         <div className="flex-1">
           <label className="block text-sm font-medium text-gray-700 mb-2">
             How can we help?
           </label>
           <textarea
-            className="appearance-none border rounded-lg w-full p-3 border-gray-300 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="appearance-none border rounded-lg w-full p-3 border-gray-300 text-gray-700 leading-tight focus:outline focus:shadow-outline"
             name="serviceInfo"
             value={formData.serviceInfo}
             onChange={handleInputChange}
@@ -152,7 +159,7 @@ const BookingForm = ({ isloggedIn }) => {
           onClick={handleOpenModal}
           className={`${
             isFormValid()
-              ? 'hover:bg-red-600 text-red-700 bg-white hover:text-white  border-red-300'
+              ? 'hover:bg-red-600 text-red-700 bg-white hover:text-white border-red-300'
               : 'bg-gray-200 text-gray-500 cursor-not-allowed border-gray-300'
           } border px-5 py-2 rounded-lg w-full sm:w-auto`}
           disabled={!isFormValid()}
