@@ -12,7 +12,7 @@ const Home = () => {
     <div className="font-inter">
       <ServicesHomeSection />
       <WhyChooseUsSection />
-      <ContactFormSection />
+      {/* <ContactFormSection /> */}
       <GallerySection />
       <ReviewSection/>
       <Contact/>
