@@ -1,6 +1,6 @@
 import React from 'react';
 
-const StatusBadge = ({ status }) => {
+const StatusBadge = ({ status, margin }) => {
   // Define CSS classes for each status
   const statusClasses = {
     Pending: {
@@ -26,7 +26,7 @@ const StatusBadge = ({ status }) => {
 
   return (
     <div
-      className={`px-2 md:px-3 py-1 md:py-1.5 rounded-md border text-center ${bg} ${text} w-auto md:w-24 text-sm md:text-base font-medium`}
+      className={`px-2 md:px-3 py-1 md:py-1.5 rounded-md border text-center ${bg} ${text} w-auto md:w-24 text-sm md:text-base font-medium mx-auto ${margin}`}
     >
       {status}
     </div>
