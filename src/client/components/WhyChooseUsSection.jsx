@@ -37,24 +37,24 @@ const WhyChooseUs = () => {
       }}
     >
       <div className="container mx-auto flex flex-col lg:flex-row items-center">
-        <div className="w-full lg:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-6 p-4">
+        <div className="hidden w-full lg:w-1/2 lg:grid grid-cols-1 sm:grid-cols-2 gap-6 p-4 border rounded-2xl">
           {/* Images displayed in a grid layout */}
-          <div className="space-y-6">
+          <div className="block space-y-6">
             <img 
-              src={require('../assets/mechanic.png')} 
+              src={require('../assets/why_image_1.png')} 
               alt="Mechanic working under a car" 
-              className="rounded-lg shadow-lg" 
+              className="rounded-2xl h-52  w-full shadow-lg border" 
             />
             <img 
-              src={require('../assets/happy-mechanic.png')} 
+              src={require('../assets/why_image_1.png')} 
               alt="Mechanic smiling" 
-              className="rounded-lg shadow-lg" 
+              className="rounded-2xl h-52 w-full shadow-lg border" 
             />
           </div>
           <img 
-            src={require('../assets/engine.png')} 
+            src={require('../assets/why_image_2.png')} 
             alt="Car engine" 
-            className="rounded-lg shadow-lg h-full" 
+            className="rounded-2xl shadow-lg w-full h-full block border" 
           />
         </div>
         <div className="w-full lg:w-1/2 p-4 lg:pl-16">
