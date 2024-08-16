@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 import LoginSignupModal from './LoginSignupModal';
 import BookingHistoryModal from './BookingHistoryModal';
@@ -18,6 +18,10 @@ const Header = () => {
   const menuRef = useRef(null);
   const { isLoggedIn, setIsLoggedIn } = useContext(UserContext);
   const navigate = useNavigate();
+
+  const location = useLocation();
+
+  const isBooking = location.pathname === '/booking';
 
   // Toggle mobile menu visibility
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -95,7 +99,7 @@ const Header = () => {
   };
 
   return (
-    <header className={`${bgColor} text-white px-4 lg:px-16 py-4 fixed top-0 left-0 right-0 z-30 transition-colors duration-300`}>
+    <header className={`text-white ${isBooking ? ' bg-black' : bgColor } px-4 lg:px-16 py-4 fixed top-0 left-0 right-0 z-30 transition-colors duration-300`}>
       <nav className="flex justify-between items-center">
         {/* Left section: Menu button and welcome message */}
         <div className='flex items-center'>
