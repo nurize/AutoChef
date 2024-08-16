@@ -37,7 +37,7 @@ const BookingHistoryModal = ({ isOpen, onClose }) => {
       isOpen={isOpen}
       onRequestClose={onClose}
       contentLabel="Booking History"
-      className="relative w-full max-w-lg max-h-[95%] bg-[#F9FAFC] text-black rounded-xl shadow-md p-6 mx-auto"
+      className="relative w-full mx-[2px] max-w-lg max-h-[95%] bg-[#F9FAFC] text-black rounded-xl shadow-md p-5 md:p-7 md:mx-auto"
       overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
     >
       <button
@@ -46,26 +46,28 @@ const BookingHistoryModal = ({ isOpen, onClose }) => {
       >
         &times;
       </button>
-      <h2 className="text-center text-2xl font-semibold mb-4">Booking History</h2>
+      <h2 className="text-center text-xl md:text-2xl font-semibold mb-4">Booking History</h2>
       <div className="bg-white w-full border border-[#E8E9ED] rounded-xl p-4">
         <div className="flex justify-between border-b bg-[#F5F6F8] p-3">
           <div>Service</div>
-          <div>Date</div>
+          <div className='hidden md:block'>Date</div>
           <div>Status</div>
         </div>
         <div className="px-4 overflow-y-auto max-h-[500px]">
           {bookings.map((booking, index) => (
             <div key={index} className="border-b ">
-              <div className="flex justify-between pt-2 items-center">
-                <div className="p-1">{booking.service}</div>
-                <div className="p-1">{booking.date}</div>
+              <div className="flex justify-between text-sm md:text-base pt-2 items-center">
+                <div className='block md:flex md:gap-6 p-1 md:p-0'>
+                  <div className="md:p-1">{booking.service}</div>
+                  <div className="text-gray-400 md:text-black md:p-1">{booking.date}</div>
+                </div>
                 <div className="p-1 text-right">
                   <StatusBadge status={booking.status} />
                 </div>
               </div>
              
               <button
-                className={`bg-[rgba(110,119,134,0.2)] text-[#6E7786] p-[6px] my-3 w-full rounded-lg ${
+                className={`bg-[rgba(110,119,134,0.2)] text-[#6E7786] p-1 md:p-[6px] my-3 w-full rounded-lg ${
                   booking.status === 'Pending'
                     ? 'cursor-not-allowed'
                     : 'hover:bg-[#d04343] active:bg-[#DE0000] hover:text-white active:text-white'
