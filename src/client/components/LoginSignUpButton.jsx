@@ -24,7 +24,7 @@ const LoginSignupButton = ({ textProp, styleProp }) => {
 
   return ( 
     <div>
-      <button className={styleProp} onClick={openModal}>
+      <button className={`${styleProp} border-[1.6px] border-gray-100 rounded-xl`} onClick={openModal}>
         {textProp}
       </button>
       <LoginSignupModal 

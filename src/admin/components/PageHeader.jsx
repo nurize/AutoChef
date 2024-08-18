@@ -1,6 +1,6 @@
 import { Icon } from '@iconify/react';
 
-const PageHeader = () => {
+const PageHeader = ({ onSearch }) => {
   return (  
     <div className="flex flex-col md:flex-row justify-between mb-5 text-lg items-center">
       <h1 className="font-semibold mb-3 md:mb-0 text-center md:text-left">Invoice</h1>
@@ -10,6 +10,7 @@ const PageHeader = () => {
           type="text" 
           placeholder="Search" 
           className="w-full md:w-80 focus:outline-none"
+          onChange={(e) => onSearch(e.target.value)}  // Trigger onSearch when input changes
         />
       </div>
     </div>

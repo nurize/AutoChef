@@ -1,31 +1,50 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef, useContext } from 'react';
 import StatusBadge from './StatusBadge';
 import { Icon } from '@iconify/react';
 import { useLocation } from 'react-router-dom';
+import { BookingContext } from '../../client/context/BookingContext';
 
-const BookedServiceRow = ({ service }) => {
-  const [currentStatus, setCurrentStatus] = useState(service.status || 'Requested');
+const BookedServiceRow = ({ service, onSelectService }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const { updateBookingStatus } = useContext(BookingContext);
 
   const location = useLocation();
-  const isDashboard = location.pathname === '/admin';
+  const isBookedServices = location.pathname === '/admin/booked-services';
 
-  const toggleDropdown = () => {
+  // Toggles the dropdown visibility
+  const toggleDropdown = (event) => {
+    event.stopPropagation(); // Prevent triggering other click events
     setIsDropdownOpen(prevState => !prevState);
   };
 
-  const handleActionClick = (action) => {
-    setCurrentStatus(action);
+  // Handles action click inside the dropdown
+  const handleActionClick = (event, action) => {
+    event.stopPropagation(); // Prevent triggering other click events
+    updateBookingStatus(service.invoiceNumber, action);
     setIsDropdownOpen(false);
-    console.log(`Action selected: ${action}`);
   };
 
+  // Closes dropdown if clicked outside
+  const closeDropdownOnClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsDropdownOpen(false);
+    }
+  };
+
+  // Attaches event listener to handle clicks outside the dropdown
+  useEffect(() => {
+    document.addEventListener('mousedown', closeDropdownOnClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', closeDropdownOnClickOutside);
+    };
+  }, []);
+
+  // Memoizes available actions based on the current status
   const actions = useMemo(() => {
-    switch (currentStatus.toLowerCase()) {
+    switch (service.status.toLowerCase()) {
       case 'requested':
-        return [
-          { label: 'Accept', action: 'Pending' },
-        ];
+        return [{ label: 'Accept', action: 'Pending' }];
       case 'pending':
         return [
           { label: 'Cancel', action: 'Cancelled' },
@@ -34,30 +53,46 @@ const BookedServiceRow = ({ service }) => {
       default:
         return [];
     }
-  }, [currentStatus]);
+  }, [service.status]);
 
   return (
-    <tr className="border-t hover:bg-gray-50 relative">
-      {isDashboard ? ('') : (
+    <tr 
+      className="border-t hover:bg-gray-50 relative"
+      onClick={() => onSelectService(service)} // Trigger service selection on row click
+    >
+      {/* Invoice Number Column - Visible only on the booked services page */}
+      {isBookedServices && (
         <td className="hidden xl:table-cell py-2 px-2 md:px-4 text-[#DE0000] text-center whitespace-nowrap">
           {service.invoiceNumber}
         </td>
       )}
-      <td className="flex flex-col md:table-cell py-2 px-2 md:px-4 text-sm md:text-base text-gray-700">
+
+      {/* Customer Name Column */}
+      <td className={`flex flex-col ${!isBookedServices ? 'sm:table-cell text-center' : ''} md:table-cell py-2 px-2 md:px-4 text-sm md:text-base text-gray-700 whitespace-nowrap`}>
         <span>{service.customerName}</span>
-        <span className="text-gray-400 md:hidden mt-1">{service.serviceName}</span>
+        {/* Display service name below customer name on smaller screens */}
+        <span className="text-gray-400 sm:hidden mt-1">{service.serviceName}</span>
       </td>
-      <td className="hidden md:table-cell py-2 px-2 md:px-4 text-sm md:text-base text-gray-700">
+
+      {/* Service Name Column */}
+      <td className={`hidden ${!isBookedServices ? 'sm:table-cell text-center' : ''} md:table-cell py-2 px-2 md:px-4 text-sm md:text-base text-gray-700`}>
         {service.serviceName}
       </td>
-      <td className="hidden md:table-cell py-2 px-2 md:px-4 text-[#6E7786] whitespace-nowrap">
+
+      {/* Date Column */}
+      <td className={`hidden ${!isBookedServices ? 'sm:table-cell text-center' : ''} sm:table-cell py-2 px-2 md:px-4 text-[#6E7786] whitespace-nowrap`}>
         {service.date}
       </td>
-      <td className="py-2 px-2 md:px-4">
-        <StatusBadge status={currentStatus} />
+
+      {/* Status Column */}
+      <td className="py-2 px-2 md:px-4 ml">
+        <StatusBadge status={service.status} />
       </td>
-      {isDashboard ? ('') : (
-        <td className="py-2 px-2 md:px-4 text-center relative">
+
+      {/* Actions Column - Visible only on the booked services page */}
+      {isBookedServices && (
+        <td className="py-2 px-2 md:px-4 text-center relative" ref={dropdownRef}>
+          {/* Show dropdown if actions are available */}
           {actions.length > 0 ? (
             <>
               <button className="inline-flex items-center justify-center focus:outline-none" onClick={toggleDropdown}>
@@ -70,7 +105,7 @@ const BookedServiceRow = ({ service }) => {
                       <li key={action}>
                         <button
                           className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          onClick={() => handleActionClick(action)}
+                          onClick={(e) => handleActionClick(e, action)}
                         >
                           {label}
                         </button>
@@ -81,7 +116,7 @@ const BookedServiceRow = ({ service }) => {
               )}
             </>
           ) : (
-            <div className="inline-flex items-center justify-center text-gray-400">
+            <div className="inline-flex items-center justify-center text-gray-400 cursor-not-allowed">
               <Icon icon="solar:menu-dots-bold" className="w-5 h-5" />
             </div>
           )}

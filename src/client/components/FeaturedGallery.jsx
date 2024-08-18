@@ -6,9 +6,10 @@ import 'slick-carousel/slick/slick-theme.css';
 import ImageModal from './ImageModal';
 
 const FeaturedGallery = () => {
-  // State to keep track of the currently selected image index
+  // State to keep track of the currently selected image index for the modal
   const [selectedIndex, setSelectedIndex] = useState(null);
-  // State to keep track of the center image index in the slider
+  
+  // State to keep track of the center image index in the slider for custom styling
   const [centerIndex, setCenterIndex] = useState(0);
 
   // Select the first 6 images from the gallery to feature in the slider
@@ -31,33 +32,32 @@ const FeaturedGallery = () => {
       <div
         className={`w-full h-[6px] ${
           i === centerIndex ? 'bg-red-600' : 'bg-gray-200'
-        } m-7 transition-colors duration-500`}
+        } m-7 transition-colors duration-500 rounded`}
       ></div>
     ),
     dotsClass: 'slick-dots custom-dots', // Custom class for the navigation dots
-    beforeChange: (oldIndex, newIndex) => {
-      // Update the centerIndex state before the slide changes
-      setCenterIndex(newIndex);
-    },
+    beforeChange: (oldIndex, newIndex) => setCenterIndex(newIndex), // Update center index before slide change
+
+    // Responsive settings for different screen sizes
     responsive: [
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 2, // Show 2 slides at once for screens <= 1024px
+          slidesToShow: 2, // Show 2 slides for screens <= 1024px
           slidesToScroll: 1, // Scroll 1 slide at a time
         },
       },
       {
         breakpoint: 768,
         settings: {
-          slidesToShow: 1, // Show 1 slide at once for screens <= 768px
+          slidesToShow: 2, // Show 1 slide for screens <= 768px
           slidesToScroll: 1, // Scroll 1 slide at a time
         },
       },
       {
         breakpoint: 480,
         settings: {
-          slidesToShow: 1, // Show 1 slide at once for screens <= 480px
+          slidesToShow: 1, // Show 1 slide for screens <= 480px
           slidesToScroll: 1, // Scroll 1 slide at a time
         },
       },
@@ -65,18 +65,18 @@ const FeaturedGallery = () => {
   };
 
   return (
-    <div className="container mx-auto px-2 md:px-4 pt-10 pb-16">
+    <div className="px-2 md:px-4 pt-10 pb-16">
       {/* Slider component for featured gallery */}
       <Slider {...settings}>
         {featuredGallery.map((image, index) => (
-          <div key={index} className="px-2 ">
-            <div className="relative overflow-hidden rounded-3xl shadow-lg">
+          <div key={index} className="px-2">
+            <div className="relative bg-gray-300 overflow-hidden rounded-3xl">
               <img
                 src={image}
                 alt={`Gallery item ${index + 1}`}
-                className="w-full h-64 sm:h-80 2xl:h-96 object-cover transition-transform duration-500 transform hover:scale-110 cursor-pointer"
+                className="w-full h-64 sm:h-80 2xl:h-[24vw] object-cover transition-transform duration-500 transform hover:scale-110 cursor-pointer"
                 onClick={() => setSelectedIndex(index)} // Open modal on image click
-                loading="lazy"
+                loading="lazy" // Lazy load images for performance optimization
               />
             </div>
           </div>
@@ -84,13 +84,15 @@ const FeaturedGallery = () => {
       </Slider>
 
       {/* Modal for displaying the selected image */}
-      <ImageModal
-        isOpen={selectedIndex !== null}
-        image={gallery[selectedIndex]}
-        onClose={() => setSelectedIndex(null)}
-        onPrevious={() => setSelectedIndex((selectedIndex - 1 + gallery.length) % gallery.length)}
-        onNext={() => setSelectedIndex((selectedIndex + 1) % gallery.length)}
-      />
+      {selectedIndex !== null && (
+        <ImageModal
+          isOpen={selectedIndex !== null}
+          image={gallery[selectedIndex]}
+          onClose={() => setSelectedIndex(null)} // Close modal
+          onPrevious={() => setSelectedIndex((selectedIndex - 1 + gallery.length) % gallery.length)} // Show previous image
+          onNext={() => setSelectedIndex((selectedIndex + 1) % gallery.length)} // Show next image
+        />
+      )}
     </div>
   );
 };

@@ -1,7 +1,6 @@
-import React, { useState, useCallback, useReducer, useContext } from 'react';
+import React, { useState, useCallback, useReducer, useContext, useEffect } from 'react';
 import Modal from 'react-modal';
-import { FaEnvelope, FaApple, FaUser } from 'react-icons/fa';
-import { FcGoogle } from 'react-icons/fc';
+import { FaEnvelope, FaUser } from 'react-icons/fa';
 import { MdOutlineVpnKey } from 'react-icons/md';
 import classNames from 'classnames';
 import { useNavigate } from 'react-router-dom';
@@ -12,10 +11,10 @@ const initialState = {
   email: '',
   firstname: '',
   lastname: '',
-  password: ''
+  password: '',
 };
 
-// Reducer function to handle form state updates
+// Reducer function to manage form input state
 function reducer(state, action) {
   switch (action.type) {
     case 'SET_EMAIL':
@@ -33,7 +32,7 @@ function reducer(state, action) {
   }
 }
 
-// Component for individual input fields with icons
+// Component for individual input fields with icons and error handling
 const InputField = ({ label, type, icon: Icon, value, onChange, error }) => (
   <div className="mb-4">
     <label className="block text-gray-700">{label}</label>
@@ -41,7 +40,10 @@ const InputField = ({ label, type, icon: Icon, value, onChange, error }) => (
       <Icon className="absolute left-3 top-4 text-gray-400" />
       <input
         type={type}
-        className={`w-full p-3 pl-10 border ${error ? 'border-red-500' : 'border-gray-300'} rounded-lg text-black`}
+        className={classNames(
+          'w-full p-3 pl-10 border rounded-lg text-black',
+          error ? 'border-red-500' : 'border-gray-300'
+        )}
         value={value}
         onChange={onChange}
       />
@@ -51,25 +53,31 @@ const InputField = ({ label, type, icon: Icon, value, onChange, error }) => (
 );
 
 const LoginSignupModal = ({ isOpen, onClose, initialAction }) => {
-  const [action, setAction] = useState(initialAction || 'Sign In'); // Current action (Sign In or Sign Up)
-  const [state, dispatch] = useReducer(reducer, initialState); // Form state management
-  const [errors, setErrors] = useState({});
+  const [action, setAction] = useState(initialAction || 'Sign In'); // State to manage current form (Sign In or Sign Up)
+  const [state, dispatch] = useReducer(reducer, initialState); // State management for form inputs
+  const [errors, setErrors] = useState({}); // State to track form validation errors
   const { setIsLoggedIn } = useContext(UserContext);
   const navigate = useNavigate();
 
-  // Validate form inputs
+  // Sanitize input values to prevent unnecessary data from being submitted
+  const sanitizeInput = (input) => input.trim();
+
+  // Validate form inputs before submission
   const validate = () => {
     const newErrors = {};
+
     if (!state.email) {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(state.email)) {
       newErrors.email = 'Please enter a valid email address';
     }
+
     if (!state.password) {
       newErrors.password = 'Password is required';
     } else if (state.password.length < 6) {
       newErrors.password = 'Password must be at least 6 characters';
     }
+
     if (action === 'Sign Up') {
       if (!state.firstname) {
         newErrors.firstname = 'First name is required';
@@ -78,67 +86,72 @@ const LoginSignupModal = ({ isOpen, onClose, initialAction }) => {
         newErrors.lastname = 'Last name is required';
       }
     }
+
     return newErrors;
   };
 
   // Handle form submission
-  const handleSubmit = useCallback(async (event) => {
-    event.preventDefault();
-    const formErrors = validate();
-    if (Object.keys(formErrors).length > 0) {
-      setErrors(formErrors);
-      return;
-    }
-    setErrors({});
+  const handleSubmit = useCallback(
+    async (event) => {
+      event.preventDefault();
+      const formErrors = validate();
+      if (Object.keys(formErrors).length > 0) {
+        setErrors(formErrors);
+        return;
+      }
+      setErrors({});
 
-    const url = action === 'Sign In' ? 'http://localhost:8080/api/auth' : 'http://localhost:8080/api/users';
+      // Prepare payload with sanitized input values
+      const payload = {
+        email: sanitizeInput(state.email),
+        password: sanitizeInput(state.password),
+      };
 
-    const payload = {
-      email: state.email,
-      password: state.password,
-    };
-
-    if (action === 'Sign Up') {
-      payload.firstName = state.firstname;
-      payload.lastName = state.lastname;
-    }
-
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json(); // Parse the error response
-        console.error('Response status:', response.status);
-        console.error('Response status text:', response.statusText);
-        console.error('Error details:', errorData);
-        throw new Error('Network response was not ok');
+      if (action === 'Sign Up') {
+        payload.firstName = sanitizeInput(state.firstname);
+        payload.lastName = sanitizeInput(state.lastname);
       }
 
-      const data = await response.json();
-      setIsLoggedIn(true);
-      console.log('Success:', data);
+      const url =
+        action === 'Sign In'
+          ? 'http://localhost:8080/api/auth'
+          : 'http://localhost:8080/api/users';
 
-      if (action === 'Sign In' || action === 'Login') {
-        setIsLoggedIn(true);
-        navigate('/services'); // Redirect on successful login
-      } else {
-        console.log('Sign Up Successful', data);
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json(); // Parse the error response
+          console.error('Error details:', errorData);
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        setIsLoggedIn(true); // Set logged-in state
+        console.log('Success:', data);
+
+        if (action === 'Sign In' || action === 'Login') {
+          setIsLoggedIn(true);
+          navigate('/services'); // Redirect on successful login
+        } else {
+          console.log('Sign Up Successful', data);
+        }
+
+        onClose(); // Close the modal on success
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while processing your request. Please try again later.');
       }
-
-      onClose();
-
-    } catch (error) {
-      console.error('Error:', error);
-      alert('An error occurred while processing your request. Please try again later.');
-    }
-  }, [action, state, onClose, navigate, setIsLoggedIn]);
+    },
+    [action, state, onClose, navigate, setIsLoggedIn]
+  );
 
   // Toggle between Sign In and Sign Up forms
   const toggleAction = useCallback(() => {
@@ -147,13 +160,36 @@ const LoginSignupModal = ({ isOpen, onClose, initialAction }) => {
     setErrors({});
   }, []);
 
+  // Disable background scrolling when the modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    // Cleanup when component unmounts or modal closes
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
+  // Error boundary handling (component-level fallback)
+  if (!state || !setIsLoggedIn) {
+    return (
+      <div className="text-center text-red-500">
+        An unexpected error occurred. Please refresh the page or try again later.
+      </div>
+    );
+  }
+
   return (
     <Modal
       isOpen={isOpen}
       onRequestClose={onClose}
       overlayClassName="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center p-4 sm:p-6 md:p-8"
       className={classNames(
-        'relative bg-white py-8 px-6 sm:px-10 md:px-14 lg:px-20 rounded-lg shadow-lg w-full',
+        'relative bg-white py-8 px-6 sm:px-10 md:px-14 lg:px-20 w-[90%] rounded-lg shadow-lg m-auto',
         action === 'Sign In' ? 'sm:w-4/5 md:w-3/5 lg:w-2/5 2xl:w-1/3' : 'max-w-xl'
       )}
     >
@@ -198,20 +234,31 @@ const LoginSignupModal = ({ isOpen, onClose, initialAction }) => {
         />
         {action === 'Sign In' && (
           <div className="text-right mt-2">
-            <a href="https://support.google.com/accounts/answer/41078?hl=en&co=GENIE.Platform%3DAndroid" className="text-red-600 text-sm">Forgot password</a>
+            <a
+              href="https://support.google.com/accounts/answer/41078?hl=en&co=GENIE.Platform%3DAndroid"
+              className="text-red-600 text-sm"
+            >
+              Forgot password
+            </a>
           </div>
         )}
-        <button type="submit" className="bg-red-600 hover:bg-[#c32222] active:bg-red-700 text-white w-full py-2 rounded-lg my-6">{action}</button>
+        <button
+          type="submit"
+          className="bg-red-600 hover:bg-[#c32222] active:bg-red-700 text-white w-full py-2 rounded-lg my-6"
+        >
+          {action}
+        </button>
       </form>
       <p className="text-center text-gray-500 mt-2">
-        {action === 'Sign In' ? "Don't" : 'Already'} have an account? 
-        <button 
-          onClick={toggleAction} 
-          className="text-red-600 ml-1">
+        {action === 'Sign In' ? "Don't" : 'Already'} have an account?
+        <button onClick={toggleAction} className="text-red-600 ml-1">
           {action === 'Sign In' ? 'Sign Up' : 'Sign In'}
         </button>
       </p>
-      <button className="absolute top-5 right-5 text-black text-2xl" onClick={onClose}>
+      <button
+        className="absolute top-5 right-5 text-black text-2xl"
+        onClick={onClose}
+      >
         &times;
       </button>
     </Modal>
