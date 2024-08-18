@@ -65,7 +65,7 @@ const NewRequests = () => {
                 <p className="text-sm text-gray-500 truncate">{request.serviceName}</p> {/* Service name */}
               </div>
             </div>
-            <StatusBadge status={request.status} margin='mx-0' /> {/* Status badge showing request status */}
+            <StatusBadge status={request.status} margin="mr-0" /> {/* Status badge showing request status */}
           </li>
         ))}
       </ul>

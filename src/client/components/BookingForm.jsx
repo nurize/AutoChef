@@ -161,7 +161,7 @@ const BookingForm = ({ isloggedIn }) => {
             isFormValid()
               ? 'hover:bg-red-600 text-red-700 bg-white hover:text-white border-red-300'
               : 'bg-gray-200 text-gray-500 cursor-not-allowed border-gray-300'
-          } border px-5 py-2 rounded-lg w-full sm:w-auto`}
+          } border px-5 py-2 rounded-lg w-full`}
           disabled={!isFormValid()}
         >
           Confirm Booking
