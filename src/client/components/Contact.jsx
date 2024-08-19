@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import engineImage from '../assets/engine-block.png';
 
@@ -27,6 +27,20 @@ const Contact = () => {
       window.location.href = 'tel:+1234567890'; 
     }
   };
+
+  // Disable scrolling on the background when the modal is open
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    // Cleanup when component unmounts or modal closes
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isModalOpen]);
 
   return (
     <div className="relative flex flex-col lg:flex-row justify-between my-24 px-4">
