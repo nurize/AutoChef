@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import ServiceDropdown from '../components/ServiceDropdown'; 
+import ServiceDropdown from '../components/ServiceDropdown';
 
 const BookingForm = ({ isloggedIn }) => {
   // State to manage modal visibility and booking confirmation status
@@ -66,42 +66,66 @@ const BookingForm = ({ isloggedIn }) => {
     }
   };
 
+  // const [serviceIds, setServiceIds] = useState([]);
+  // const [selectedServiceId, setSelectedServiceId] = useState('');
+
+  // Fetch service IDs and set them in state
+  // useEffect(() => {
+  //   const fetchServiceIds = async () => {
+  //     try {
+  //       const response = await fetch('http://localhost:8080/api/services');
+  //       if (!response.ok) {
+  //         throw new Error('Network response was not ok');
+  //       }
+  //       const services = await response.json();
+  //       setServiceIds(services.map(service => service._id));
+  //       // setSelectedServiceId(services.filter(service => service.name === formData.service)._id);
+  //       // console.log(selectedServiceId);
+  //     } catch (error) {
+  //       console.error('Error fetching service IDs:', error);
+  //     }
+  //   };
+
+  //   fetchServiceIds();
+  // });
+
   // Confirm booking and close the first modal
   const handleConfirmBooking = async (event) => {
     setModalState({ isOpen: false, isBookingConfirmed: true });
-    // Add your booking confirmation logic here
     event.preventDefault();
 
     const url = 'http://localhost:8080/api/booking';
 
     const payload = {
-       
+      contact: formData.contactNumber,
+      service: formData.service,
+      vehicleInfo: formData.serviceInfo,
     };
 
     try {
       const response = await fetch(url, {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-          },
-          body: JSON.stringify(payload),
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
-          const errorData = await response.json(); // Parse the error response
-          console.error('Response status:', response.status);
-          console.error('Response status text:', response.statusText);
-          console.error('Error details:', errorData);
-          throw new Error('Network response was not ok');
+        const errorData = await response.json(); // Parse the error response
+        console.error('Response status:', response.status);
+        console.error('Response status text:', response.statusText);
+        console.error('Error details:', errorData);
+        throw new Error('Network response was not ok');
       }
 
       const data = await response.json();
       
       console.log('Success:', data); 
     } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred while processing your request. Please try again later.');
+      console.error('Error:', error);
+      alert('An error occurred while processing your request. Please try again later.');
     }
   };
 
@@ -157,7 +181,10 @@ const BookingForm = ({ isloggedIn }) => {
           <label className="block text-gray-700 text-sm font-medium mb-2" htmlFor="service">
             Service
           </label>
-          <ServiceDropdown formData={formData} handleInputChange={handleInputChange} />
+          <ServiceDropdown 
+            formData={formData} 
+            handleInputChange={handleInputChange} 
+          />
         </div>
 
         <div className="flex-1">
