@@ -50,3 +50,15 @@ app.use("/api/customer-report", CustomerReportRoute);
 app.listen(port, () => {
   console.log(`Listening on Port ${port}....`);
 });
+
+
+// For running frontend and backend together
+//It should be done in package.json
+// "scripts": { 
+  //   "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"", 
+  //   "start:frontend": "react-scripts start",
+  //   "start:backend": "cd Backend && npm run start",
+  //   "build": "react-scripts build",
+  //   "test": "react-scripts test",
+  //   "eject": "react-scripts eject"
+  // }, 
