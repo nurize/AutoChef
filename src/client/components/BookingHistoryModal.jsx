@@ -8,18 +8,33 @@ const BookingHistoryModal = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     const fetchBookings = async () => {
-      const data = [
-        { service: 'Full Body Spray', date: '20th July, 2024', status: 'Pending', invoiceNumber: 'INV001' },
-        { service: 'Full Body Spray', date: '20th July, 2024', status: 'Requested', invoiceNumber: 'INV002' },
-        { service: 'Full Body Spray', date: '20th July, 2024', status: 'Cancelled', invoiceNumber: 'INV003' },
-        { service: 'Full Body Spray', date: '20th July, 2024', status: 'Completed', invoiceNumber: 'INV004' },
-        { service: 'Full Body Spray', date: '20th July, 2024', status: 'Pending', invoiceNumber: 'INV005' },
-      ];
-      setBookings(data);
+      try {
+        const response = await fetch('http://localhost:8080/api/booking');
+  
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+  
+        const result = await response.json();
+  
+        // Assuming result is an array of booking objects
+        const data = result.map(booking => ({
+          service: booking.service, // Adjust if the field name is different
+          date: booking.date,
+          status: booking.status,
+          // invoiceNumber: booking.invoiceNumber // Ensure you include this if you use it for updates
+        }));
+  
+        console.log(data); // Log to verify the structure
+        setBookings(data);
+      } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+      }
     };
-
+  
     fetchBookings();
   }, [setBookings]);
+  
 
   useEffect(() => {
     if (isOpen) {

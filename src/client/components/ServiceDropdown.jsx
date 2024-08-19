@@ -33,7 +33,7 @@ function ServiceDropdown({ formData, handleInputChange }) {
     >
       <option value="">--Select Service--</option>
       {services.map((service, index) => (
-        <option key={index} value={index}>
+        <option key={index} value={service.name}>
           {service.name}
         </option>
       ))}
