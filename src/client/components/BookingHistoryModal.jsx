@@ -3,17 +3,43 @@ import Modal from 'react-modal';
 import StatusBadge from '../../admin/components/StatusBadge';
 import { BookingContext } from '../context/BookingContext';
 
-const BookingHistoryModal = ({ isOpen, onClose }) => {
+const BookingHistoryModal = ({ isOpen, onClose, customerId }) => {
   const { bookings, setBookings } = useContext(BookingContext);
+
+  // Fetch bookings for the current user's customerId when the modal opens
+  // useEffect(() => {
+  //   const fetchBookings = async () => {
+  //     try {
+  //       if (!customerId) {
+  //         throw new Error('No customer ID provided');
+  //       }
+
+  //       // API call to fetch bookings for the logged-in user
+  //       const response = await fetch(`/api/customers/${customerId}/bookings`); // Replace with your actual API endpoint
+  //       if (!response.ok) {
+  //         throw new Error('Failed to fetch bookings');
+  //       }
+  //       const data = await response.json();
+  //       setBookings(data);
+  //     } catch (error) {
+  //       console.error('Error fetching bookings:', error);
+  //       alert('An error occurred while fetching bookings. Please try again later.');
+  //     }
+  //   };
+
+  //   if (isOpen && customerId) {
+  //     fetchBookings();
+  //   }
+  // }, [isOpen, customerId, setBookings]);
 
   useEffect(() => {
     const fetchBookings = async () => {
       const data = [
-        { service: 'Full Body Spray', date: '20th July, 2024', status: 'Pending', invoiceNumber: 'INV001' },
-        { service: 'Full Body Spray', date: '20th July, 2024', status: 'Requested', invoiceNumber: 'INV002' },
-        { service: 'Full Body Spray', date: '20th July, 2024', status: 'Cancelled', invoiceNumber: 'INV003' },
-        { service: 'Full Body Spray', date: '20th July, 2024', status: 'Completed', invoiceNumber: 'INV004' },
-        { service: 'Full Body Spray', date: '20th July, 2024', status: 'Pending', invoiceNumber: 'INV005' },
+        { service: 'Full Body Spray', date: '19th August, 2024', status: 'Pending', invoiceNumber: 'INV001' },
+        { service: 'Full Body Spray', date: '19th August, 2024', status: 'Requested', invoiceNumber: 'INV002' },
+        { service: 'Full Body Spray', date: '18th August, 2024', status: 'Cancelled', invoiceNumber: 'INV003' },
+        { service: 'Full Body Spray', date: '17th August, 2024', status: 'Completed', invoiceNumber: 'INV004' },
+        { service: 'Full Body Spray', date: '16th August, 20244', status: 'Pending', invoiceNumber: 'INV005' },
       ];
       setBookings(data);
     };
@@ -21,6 +47,7 @@ const BookingHistoryModal = ({ isOpen, onClose }) => {
     fetchBookings();
   }, [setBookings]);
 
+  // Disable page scroll when the modal is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -33,10 +60,11 @@ const BookingHistoryModal = ({ isOpen, onClose }) => {
     };
   }, [isOpen]);
 
+  // Function to update the status of a booking via API call
   const updateBookingStatus = async (invoiceNumber, newStatus) => {
     try {
-      // API call to update the booking status in the database
-      const response = await fetch(`/api/bookings/${invoiceNumber}`, {
+      // API call to update the booking status for the logged-in user
+      const response = await fetch(`/api/customers/${customerId}/bookings/${invoiceNumber}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -48,7 +76,7 @@ const BookingHistoryModal = ({ isOpen, onClose }) => {
         throw new Error('Failed to update booking status');
       }
 
-      // Update the local state
+      // Update the local state with the new status
       setBookings((prevBookings) =>
         prevBookings.map((booking) =>
           booking.invoiceNumber === invoiceNumber ? { ...booking, status: newStatus } : booking
@@ -60,19 +88,31 @@ const BookingHistoryModal = ({ isOpen, onClose }) => {
     }
   };
 
+  // Function to handle cancellation of a booking
   const handleCancel = (invoiceNumber) => {
     if (window.confirm('Are you sure you want to cancel this booking?')) {
       updateBookingStatus(invoiceNumber, 'Cancelled');
     }
   };
 
-  const handleDelete = (invoiceNumber) => {
+  // Function to handle deletion of a booking
+  const handleDelete = async (invoiceNumber) => {
     if (window.confirm('Are you sure you want to delete this booking?')) {
-      setBookings((prevBookings) =>
-        prevBookings.filter((booking) => booking.invoiceNumber !== invoiceNumber)
-      );
-      // Optionally make an API call to delete the booking in the database
-      // await fetch(`/api/bookings/${invoiceNumber}`, { method: 'DELETE' });
+      try {
+        // API call to delete the booking for the logged-in user
+        const response = await fetch(`/api/customers/${customerId}/bookings/${invoiceNumber}`, { method: 'DELETE' });
+        if (!response.ok) {
+          throw new Error('Failed to delete booking');
+        }
+
+        // Update the local state by removing the deleted booking
+        setBookings((prevBookings) =>
+          prevBookings.filter((booking) => booking.invoiceNumber !== invoiceNumber)
+        );
+      } catch (error) {
+        console.error('Error deleting booking:', error);
+        alert('An error occurred while deleting the booking. Please try again.');
+      }
     }
   };
 
@@ -98,36 +138,42 @@ const BookingHistoryModal = ({ isOpen, onClose }) => {
           <div>Status</div>
         </div>
         <div className="px-4 overflow-y-auto max-h-[500px]">
-          {bookings.map((booking, index) => (
-            <div key={index} className="border-b">
-              <div className="flex justify-between text-sm md:text-base pt-2 items-center">
-                <div className="block md:flex md:gap-6 p-1 md:p-0">
-                  <div className="md:p-1">{booking.service}</div>
-                  <div className="text-gray-400 md:text-black md:p-1">{booking.date}</div>
-                </div>
-                <div className="p-1 text-right">
-                  <StatusBadge status={booking.status} />
-                </div>
-              </div>
-             
-              <button
-                className={`bg-[rgba(110,119,134,0.2)] text-[#6E7786] p-1 md:p-[6px] my-3 w-full rounded-lg ${
-                  booking.status === 'Pending'
-                    ? 'cursor-not-allowed'
-                    : 'hover:bg-[#d04343] active:bg-[#DE0000] hover:text-white active:text-white'
-                }`}
-                disabled={booking.status === 'Pending'}
-                onClick={() => 
-                  booking.status === 'Requested' 
-                  ? handleCancel(booking.invoiceNumber) 
-                  : handleDelete(booking.invoiceNumber)
-                }
-              >
-                {booking.status === 'Requested' ? 'Cancel' : 'Delete'}
-              </button>
-              
+          {bookings.length === 0 ? (
+            <div className="text-center p-4 text-gray-600">
+              No services booked.
             </div>
-          ))}
+          ) : (
+            bookings.map((booking, index) => (
+              <div key={index} className="border-b">
+                <div className="flex justify-between text-sm md:text-base pt-2 items-center">
+                  <div className="block md:flex md:gap-6 p-1 md:p-0">
+                    <div className="md:p-1">{booking.service}</div>
+                    <div className="text-gray-400 md:text-black md:p-1">{booking.date}</div>
+                  </div>
+                  <div className="p-1 text-right">
+                    <StatusBadge status={booking.status} />
+                  </div>
+                </div>
+               
+                <button
+                  className={`bg-[rgba(110,119,134,0.2)] text-[#6E7786] p-1 md:p-[6px] my-3 w-full rounded-lg ${
+                    booking.status === 'Pending'
+                      ? 'cursor-not-allowed'
+                      : 'hover:bg-[#d04343] active:bg-[#DE0000] hover:text-white active:text-white'
+                  }`}
+                  disabled={booking.status === 'Pending'}
+                  onClick={() => 
+                    booking.status === 'Requested' 
+                    ? handleCancel(booking.invoiceNumber) 
+                    : handleDelete(booking.invoiceNumber)
+                  }
+                >
+                  {booking.status === 'Requested' ? 'Cancel' : 'Delete'}
+                </button>
+                
+              </div>
+            ))
+          )}
         </div>
       </div>
     </Modal>
