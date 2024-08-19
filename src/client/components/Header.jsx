@@ -81,7 +81,7 @@ const Header = () => {
   const openBookingHistoryModal = () => setIsBookingHistoryModalOpen(true);
 
   return (
-    <header className={`text-white ${isBooking ? 'bg-black' : bgColor} px-4 lg:px-16 py-4 fixed top-0 left-0 right-0 z-30 transition-colors duration-300`}>
+    <header className={`text-white ${isBooking ? 'bg-black' : bgColor } px-4 lg:px-16 py-4 fixed top-0 left-0 right-0 z-30 `}>
       <nav className="flex justify-between items-center">
         <div className='flex items-center'>
           {/* Menu Button */}
