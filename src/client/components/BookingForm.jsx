@@ -19,7 +19,7 @@ const BookingForm = ({ isSignedIn }) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value
-    }));
+    })); 
   };
 
   // Function to open the modal
@@ -29,8 +29,42 @@ const BookingForm = ({ isSignedIn }) => {
   };
 
   // Function to confirm the booking
-  const handleConfirmBooking = () => {
+  const handleConfirmBooking = async (event) => {
     setModalState({ isOpen: false, isBookingConfirmed: true });
+    // Add your booking confirmation logic here
+    event.preventDefault();
+
+    const url = 'http://localhost:8080/api/booking';
+
+    const payload = {
+       
+    };
+
+    try {
+      const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+          },
+          body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+          const errorData = await response.json(); // Parse the error response
+          console.error('Response status:', response.status);
+          console.error('Response status text:', response.statusText);
+          console.error('Error details:', errorData);
+          throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      
+      console.log('Success:', data); 
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while processing your request. Please try again later.');
+    }
   };
 
   // Function to close the modal
@@ -109,6 +143,7 @@ const BookingForm = ({ isSignedIn }) => {
             onChange={handleInputChange}
             placeholder="Tell us a little about the request..."
             rows="4"
+            required
           ></textarea>
         </div>
         
