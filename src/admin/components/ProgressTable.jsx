@@ -2,29 +2,34 @@ import React, { useEffect, useState } from 'react';
 import BookedServicesTable from './BookedServicesTable';
 import { useNavigate } from 'react-router-dom';
 import ArrowUpButton from './ArrowUpButton';
+import SkeletonLoader from './SkeletonLoader';
 
 const ProgressTable = () => {
-  const [bookedServices, setBookedServices] = useState([]);
-  const [visibleServices, setVisibleServices] = useState([]);
-  const [rowsToShow, setRowsToShow] = useState(0);
-  const navigate = useNavigate();
+  const [bookedServices, setBookedServices] = useState([]); // State to store fetched services
+  const [visibleServices, setVisibleServices] = useState([]); // State to manage visible rows in the table
+  const [rowsToShow, setRowsToShow] = useState(0); // State to calculate rows to show based on screen size
+  const [loading, setLoading] = useState(true); // State to manage loading state
+  const [error, setError] = useState(null); // State to handle potential errors
+  const navigate = useNavigate(); // Hook for programmatic navigation
 
   useEffect(() => {
-    // Placeholder data
-    const placeholderData = [
-      { id: 1, invoiceNumber: '#20025785644', customerName: 'John Doe', serviceName: 'Oil Change', date: '2024-07-25', status: 'Requested' },
-      { id: 2, invoiceNumber: '#20025785645', customerName: 'Jane Smith', serviceName: 'Tire Replacement', date: '2024-07-24', status: 'Pending' },
-      { id: 3, invoiceNumber: '#20025785646', customerName: 'Alice Johnson', serviceName: 'Brake Inspection', date: '2024-07-23', status: 'Completed' },
-      { id: 4, invoiceNumber: '#20025785647', customerName: 'Bob Brown', serviceName: 'Battery Replacement', date: '2024-07-22', status: 'Cancelled' },
-      { id: 5, invoiceNumber: '#20025785648', customerName: 'Charlie Green', serviceName: 'Paint Correction', date: '2024-07-21', status: 'Requested' },
-      { id: 6, invoiceNumber: '#20025785649', customerName: 'Daisy Blue', serviceName: 'Transmission Repair', date: '2024-07-20', status: 'Pending' },
-      { id: 7, invoiceNumber: '#20025785650', customerName: 'Ella White', serviceName: 'Engine Tune-Up', date: '2024-07-19', status: 'Completed' },
-      { id: 8, invoiceNumber: '#20025785651', customerName: 'Frank Black', serviceName: 'Wheel Alignment', date: '2024-07-18', status: 'Cancelled' },
-      { id: 9, invoiceNumber: '#20025785652', customerName: 'Grace Pink', serviceName: 'Air Filter Replacement', date: '2024-07-17', status: 'Requested' },
-      { id: 10, invoiceNumber: '#20025785653', customerName: 'Henry Red', serviceName: 'Spark Plug Change', date: '2024-07-16', status: 'Pending' },
-    ];
+    // Fetch data from API
+    const fetchBookedServices = async () => {
+      try {
+        const response = await fetch('https://api.example.com/booked-services'); // Replace with your actual API endpoint
+        if (!response.ok) {
+          throw new Error('Failed to fetch booked services');
+        }
+        const data = await response.json();
+        setBookedServices(data);
+      } catch (err) {
+        setError(err.message || 'Failed to fetch data');
+      } finally {
+        setLoading(false); // Stop loading state once the data is fetched
+      }
+    };
 
-    setBookedServices(placeholderData);
+    fetchBookedServices();
   }, []);
 
   useEffect(() => {
@@ -42,7 +47,7 @@ const ProgressTable = () => {
   }, []);
 
   useEffect(() => {
-    setVisibleServices(bookedServices.slice(0, rowsToShow));
+    setVisibleServices(bookedServices.slice(0, rowsToShow)); // Update visible services based on rows to show
   }, [bookedServices, rowsToShow]);
 
   const handleArrowClick = () => {
@@ -61,7 +66,11 @@ const ProgressTable = () => {
           <ArrowUpButton onClick={handleArrowClick} />
         </div>
       </div>
-      <BookedServicesTable bookedServices={visibleServices} />
+      {loading ? (
+        <SkeletonLoader itemCount={5} layout="horizontal" type="table" />
+      ) : (
+        <BookedServicesTable bookedServices={visibleServices} />
+      )}
     </div>
   );
 };
