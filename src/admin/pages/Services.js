@@ -34,49 +34,60 @@ const Services = () => {
   };
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">Services</h1>
-      <div className="mb-4">
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-6">Services</h1>
+      <div className="mb-6 flex gap-4">
         <input
           type="text"
           placeholder="Name"
           value={newService.name}
           onChange={(e) => setNewService({ ...newService, name: e.target.value })}
-          className="border p-2"
+          className="border p-2 w-full"
         />
         <input
           type="text"
           placeholder="Description"
           value={newService.description}
           onChange={(e) => setNewService({ ...newService, description: e.target.value })}
-          className="border p-2 ml-2"
+          className="border p-2 w-full"
         />
         <input
           type="number"
           placeholder="Price"
           value={newService.price}
           onChange={(e) => setNewService({ ...newService, price: e.target.value })}
-          className="border p-2 ml-2"
+          className="border p-2 w-full"
         />
-        <button onClick={handleAddService} className="bg-blue-500 text-white p-2 ml-2">Add Service</button>
+        <button onClick={handleAddService} className="bg-red-500 text-white p-2">Add</button>
       </div>
-      <table className="min-w-full bg-white">
+      <table className="min-w-full bg-white border">
         <thead>
           <tr>
-            <th className="py-2">Name</th>
-            <th className="py-2">Description</th>
-            <th className="py-2">Price</th>
-            <th className="py-2">Actions</th>
+            <th className="py-3 px-4 text-left">Name</th>
+            <th className="py-3 px-4 text-left">Description</th>
+            <th className="py-3 px-4 text-left">Features</th>
+            <th className="py-3 px-4 text-left">Actions</th>
           </tr>
         </thead>
         <tbody>
           {services.map(service => (
-            <tr key={service.id}>
-              <td className="py-2 px-4">{service.name}</td>
-              <td className="py-2 px-4">{service.description}</td>
-              <td className="py-2 px-4">{service.price}</td>
-              <td className="py-2 px-4">
-                <button onClick={() => handleDeleteService(service.id)} className="bg-red-500 text-white p-1">Delete</button>
+            <tr key={service.id} className="border-t">
+              <td className="py-3 px-4">{service.name}</td>
+              <td className="py-3 px-4">{service.description}</td>
+              <td className="py-3 px-4">
+                <ul className="list-disc pl-5">
+                  {service.features.map((feature, index) => (
+                    <li key={index}>{feature}</li>
+                  ))}
+                </ul>
+              </td>
+              <td className="py-3 px-4 flex gap-2">
+                <button className="bg-blue-500 text-white p-1">
+                  <i className="fas fa-edit"></i>
+                </button>
+                <button onClick={() => handleDeleteService(service.id)} className="bg-red-500 text-white p-1">
+                  <i className="fas fa-trash"></i>
+                </button>
               </td>
             </tr>
           ))}

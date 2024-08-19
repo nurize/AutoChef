@@ -2,7 +2,7 @@ const heroSections = [
   {
     page: '/',
     backgroundImage: require('../assets/Hero-bg-Image.png'),
-    title: 'Expert Auto Repair for All Makes and Models',
+    title: 'Autochef',
     description: 'At The Auto Chef, we blend meticulous craftsmanship with innovative techniques to transform your vehicle into a masterpiece. Specializing in high-end automobile restoration and facelifts, our expert team ensures every detail is perfected.',
   },
   {
@@ -30,12 +30,12 @@ const heroSections = [
     title: 'Contact Us',
     description: 'Get in touch with us for any queries or to schedule an appointment.',
   },
-  {
-    page: '/booking',
-    backgroundImage: require('../assets/Hero-bg-Image.png'),
-    title: 'Book an Appointment',
-    description: 'Schedule your appointment with our expert team today.',
-  },
+  // {
+  //   page: '/booking',
+  //   backgroundImage: require('../assets/Hero-bg-Image.png'),
+  //   title: 'Book an Appointment',
+  //   description: 'Schedule your appointment with our expert team today.',
+  // },
   {
     page: '/reviews',
     backgroundImage: require('../assets/Hero-bg-Image.png'),

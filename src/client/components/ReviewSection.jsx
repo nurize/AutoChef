@@ -45,7 +45,7 @@ const SwiperSlider = () => {
                 className="w-full md:w-[322px] h-[354px] object-cover rounded-lg mb-4 md:mb-0 md:mr-10"
                 loading='lazy'
               />
-              <div className="max-w-[400px] text-center md:text-left">
+              <div className="max-w-[400px] flex-1 text-center md:text-left">
                 {/* Review text */}
                 <p className="text-base sm:text-lg md:text-xl">{review.text}</p>
                 {/* Reviewer name */}
