@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { UserContext } from '../context/UserContext';
 
-const LogoutButton = ({styleProp, iconProp}) => {
+const LogoutButton = ({styleProp, iconProp, textStyle}) => {
   const { setIsLoggedIn } = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -31,7 +31,7 @@ const LogoutButton = ({styleProp, iconProp}) => {
       className={`flex items-center ${styleProp}`}
     >
       <Icon icon="ic:round-logout" className={iconProp} />
-      Logout
+      <span className={textStyle}>Logout</span>
     </button>
   );
 };

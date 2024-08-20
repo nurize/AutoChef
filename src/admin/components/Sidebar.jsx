@@ -55,6 +55,7 @@ const Sidebar = () => {
       <LogoutButton
         styleProp='absolute bottom-8 left-1/2 transform -translate-x-1/2 md:left-9 lg:transform-none flex items-center text-[#D90428]'
         iconProp ="w-7 h-7 mr-2"
+        textStyle={'hidden lg:inline-block'}
       />
     </div>
   );

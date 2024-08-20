@@ -93,7 +93,7 @@ const StatisticsSection = ({
   };
 
   // Display error message if data fetching fails
-  if (error) return <div>{error}</div>;
+  // if (error) return <div>{error}</div>;
 
   return (
     <div className="grid grid-cols-1 gap-6 mb-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
