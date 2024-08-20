@@ -18,9 +18,9 @@ const Sidebar = () => {
   return (
     <div className="fixed w-16 sm:w-20 lg:w-72 h-screen p-2 sm:p-4 border-r border-[#E8E9ED]">
       {/* Logo section */}
-      <div className="flex items-center justify-center lg:justify-start mb-5">
+      <Link to='/admin' className="flex items-center justify-center lg:justify-start mb-5">
         <img src={Logo} alt="AutoChef Logo" className='w-[40px] lg:w-[95px] h-[40px] lg:h-[74px]' />
-      </div>
+      </Link>
 
       {/* Navigation menu */}
       <nav>
