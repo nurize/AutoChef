@@ -33,7 +33,7 @@ const ProgressTable = () => {
   // }, []);
 
 
-  // Commented out the simulation and placeholder data logic
+  // Comment out the simulation and placeholder data logic
 
   useEffect(() => {
     // Simulate a delay to showcase the loading state with placeholder data
@@ -57,23 +57,27 @@ const ProgressTable = () => {
     }, 1500); // Simulated delay of 1.5 seconds
   }, []);
 
+  // useEffect(() => {
+  //   const calculateRowsToShow = () => {
+  //     const availableHeight = window.innerHeight - 1000; // Adjust based on your layout (header, margins, etc.)
+  //     const rowHeight = 50; // Approximate row height (adjust based on your table's row height)
+  //     const rows = Math.floor(availableHeight / rowHeight);
+  //     setRowsToShow(rows);
+  //   };
+
+  //   calculateRowsToShow();
+  //   window.addEventListener('resize', calculateRowsToShow);
+
+  //   return () => window.removeEventListener('resize', calculateRowsToShow);
+  // }, []);
+
+  // useEffect(() => {
+  //   setVisibleServices(bookedServices.slice(0, rowsToShow)); // Update visible services based on rows to show
+  // }, [bookedServices, rowsToShow]);
+
   useEffect(() => {
-    const calculateRowsToShow = () => {
-      const availableHeight = window.innerHeight - 1000; // Adjust based on your layout (header, margins, etc.)
-      const rowHeight = 50; // Approximate row height (adjust based on your table's row height)
-      const rows = Math.floor(availableHeight / rowHeight);
-      setRowsToShow(rows);
-    };
-
-    calculateRowsToShow();
-    window.addEventListener('resize', calculateRowsToShow);
-
-    return () => window.removeEventListener('resize', calculateRowsToShow);
-  }, []);
-
-  useEffect(() => {
-    setVisibleServices(bookedServices.slice(0, rowsToShow)); // Update visible services based on rows to show
-  }, [bookedServices, rowsToShow]);
+    setVisibleServices(bookedServices.slice(0, 4));
+  }, [bookedServices]);
 
   const handleArrowClick = () => {
     navigate('/admin/booked-services');
