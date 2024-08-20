@@ -96,6 +96,7 @@ const GalleryStatus = () => {
                   src={image.src}
                   alt={`Gallery image ${index + 1}`}
                   className="w-10 h-10 bg-gray-50 rounded-md"
+                  loading='lazy'
                 />
                 <div>
                   <p className="font-semibold">Image {index + 1}</p>

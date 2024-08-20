@@ -12,24 +12,49 @@ const ProgressTable = () => {
   const [error, setError] = useState(null); // State to handle potential errors
   const navigate = useNavigate(); // Hook for programmatic navigation
 
-  useEffect(() => {
-    // Fetch data from API
-    const fetchBookedServices = async () => {
-      try {
-        const response = await fetch('https://api.example.com/booked-services'); // Replace with your actual API endpoint
-        if (!response.ok) {
-          throw new Error('Failed to fetch booked services');
-        }
-        const data = await response.json();
-        setBookedServices(data);
-      } catch (err) {
-        setError(err.message || 'Failed to fetch data');
-      } finally {
-        setLoading(false); // Stop loading state once the data is fetched
-      }
-    };
+  // useEffect(() => {
+  //   // Fetch data from API
+  //   const fetchBookedServices = async () => {
+  //     try {
+  //       const response = await fetch('https://api.example.com/booked-services'); // Replace with your actual API endpoint
+  //       if (!response.ok) {
+  //         throw new Error('Failed to fetch booked services');
+  //       }
+  //       const data = await response.json();
+  //       setBookedServices(data);
+  //     } catch (err) {
+  //       setError(err.message || 'Failed to fetch data');
+  //     } finally {
+  //       setLoading(false); // Stop loading state once the data is fetched
+  //     }
+  //   };
 
-    fetchBookedServices();
+  //   fetchBookedServices();
+  // }, []);
+
+
+  // Commented out the simulation and placeholder data logic
+
+  useEffect(() => {
+    // Simulate a delay to showcase the loading state with placeholder data
+    setLoading(true); // Start loading state
+    setTimeout(() => {
+      const placeholderData = [
+        { id: 1, invoiceNumber: '#20025785644', customerName: 'John Doe', serviceName: 'Oil Change', date: '2024-07-25', status: 'Requested' },
+        { id: 2, invoiceNumber: '#20025785645', customerName: 'Jane Smith', serviceName: 'Tire Replacement', date: '2024-07-24', status: 'Pending' },
+        { id: 3, invoiceNumber: '#20025785646', customerName: 'Alice Johnson', serviceName: 'Brake Inspection', date: '2024-07-23', status: 'Completed' },
+        { id: 4, invoiceNumber: '#20025785647', customerName: 'Bob Brown', serviceName: 'Battery Replacement', date: '2024-07-22', status: 'Cancelled' },
+        { id: 5, invoiceNumber: '#20025785648', customerName: 'Charlie Green', serviceName: 'Paint Correction', date: '2024-07-21', status: 'Requested' },
+        { id: 6, invoiceNumber: '#20025785649', customerName: 'Daisy Blue', serviceName: 'Transmission Repair', date: '2024-07-20', status: 'Pending' },
+        { id: 7, invoiceNumber: '#20025785650', customerName: 'Ella White', serviceName: 'Engine Tune-Up', date: '2024-07-19', status: 'Completed' },
+        { id: 8, invoiceNumber: '#20025785651', customerName: 'Frank Black', serviceName: 'Wheel Alignment', date: '2024-07-18', status: 'Cancelled' },
+        { id: 9, invoiceNumber: '#20025785652', customerName: 'Grace Pink', serviceName: 'Air Filter Replacement', date: '2024-07-17', status: 'Requested' },
+        { id: 10, invoiceNumber: '#20025785653', customerName: 'Henry Red', serviceName: 'Spark Plug Change', date: '2024-07-16', status: 'Pending' },
+      ];
+
+      setBookedServices(placeholderData);
+      setLoading(false); // Stop loading state once data is set
+    }, 1500); // Simulated delay of 1.5 seconds
   }, []);
 
   useEffect(() => {
