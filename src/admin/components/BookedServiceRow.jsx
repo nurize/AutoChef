@@ -58,7 +58,7 @@ const BookedServiceRow = ({ service, onSelectService }) => {
   return (
     <tr 
       className="border-t hover:bg-gray-50 relative"
-      onClick={() => onSelectService(service)} // Trigger service selection on row click
+      onClick={() => isBookedServices && onSelectService(service)} // Trigger service selection on row click
     >
       {/* Invoice Number Column - Visible only on the booked services page */}
       {isBookedServices && (
