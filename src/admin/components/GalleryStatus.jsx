@@ -87,6 +87,10 @@ const GalleryStatus = () => {
       </div>
       {loading ? (
         <SkeletonLoader itemCount={4} layout="horizontal" type="gallery" />
+      ) : recentImages.length === 0 ? (
+        <div className="text-center justify-center items-center pt-16 text-gray-600">
+          No gallery images added.
+        </div>
       ) : (
         <ul>
           {recentImages.map((image, index) => (

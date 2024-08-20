@@ -7,7 +7,6 @@ import SkeletonLoader from './SkeletonLoader';
 const ProgressTable = () => {
   const [bookedServices, setBookedServices] = useState([]); // State to store fetched services
   const [visibleServices, setVisibleServices] = useState([]); // State to manage visible rows in the table
-  const [rowsToShow, setRowsToShow] = useState(0); // State to calculate rows to show based on screen size
   const [loading, setLoading] = useState(true); // State to manage loading state
   const [error, setError] = useState(null); // State to handle potential errors
   const navigate = useNavigate(); // Hook for programmatic navigation
@@ -97,7 +96,11 @@ const ProgressTable = () => {
       </div>
       {loading ? (
         <SkeletonLoader itemCount={5} layout="horizontal" type="table" />
-      ) : (
+      ) : bookedServices.length === 0 ? (
+        <div className="flex flex-col justify-center items-center p-4 text-gray-600 h-40">
+          No services booked.
+        </div>
+      ) : (  
         <BookedServicesTable bookedServices={visibleServices} />
       )}
     </div>
