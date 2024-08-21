@@ -94,7 +94,11 @@ const BookingForm = ({ isloggedIn }) => {
     setModalState({ isOpen: false, isBookingConfirmed: true });
     event.preventDefault();
 
-    const url = 'http://localhost:8080/api/booking';
+    //const url = 'http://localhost:8080/api/booking';
+
+    // const url = "https://autochef-backend.onrender.com";
+
+    const url =`${process.env.REACT_APP_BACKEND_URL}/api/booking` //template literal
 
     const payload = {
       contact: formData.contactNumber,

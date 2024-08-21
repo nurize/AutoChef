@@ -112,10 +112,16 @@ const LoginSignupModal = ({ isOpen, onClose, initialAction }) => {
         payload.lastName = sanitizeInput(state.lastname);
       }
 
+      // const url =
+      //   action === 'Sign In'
+      //     ? 'http://localhost:8080/api/auth'
+      //     : 'http://localhost:8080/api/users';
+
+      //template literal used
       const url =
         action === 'Sign In'
-          ? 'http://localhost:8080/api/auth'
-          : 'http://localhost:8080/api/users';
+          ? `${process.env.REACT_APP_BACKEND_URL}/api/auth`
+          : `${process.env.REACT_APP_BACKEND_URL}/api/users`;
 
       try {
         const response = await fetch(url, {
