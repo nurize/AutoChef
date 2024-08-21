@@ -87,6 +87,10 @@ const GalleryStatus = () => {
       </div>
       {loading ? (
         <SkeletonLoader itemCount={4} layout="horizontal" type="gallery" />
+      ) : recentImages.length === 0 ? (
+        <div className="text-center justify-center items-center pt-16 text-gray-600">
+          No gallery images added.
+        </div>
       ) : (
         <ul>
           {recentImages.map((image, index) => (
@@ -96,6 +100,7 @@ const GalleryStatus = () => {
                   src={image.src}
                   alt={`Gallery image ${index + 1}`}
                   className="w-10 h-10 bg-gray-50 rounded-md"
+                  loading='lazy'
                 />
                 <div>
                   <p className="font-semibold">Image {index + 1}</p>
