@@ -56,7 +56,7 @@ const Footer = () => {
               <h3 className="font-bold mb-4">Our Services</h3>
               <ul>
                 {services.map(service => (
-                  <li key={service.title} className='mb-1'><Link to={`/services#${service.path}`} className='hover:text-[#DE0000]'>{service.title}</Link></li>
+                  <li key={service.title} className='mb-1'><Link to={`/services#${service.path}`} className='hover:text-[#DE0000] transition duration-300'>{service.title}</Link></li>
                 ))}
               </ul>
             </div>

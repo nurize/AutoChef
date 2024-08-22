@@ -102,7 +102,7 @@ const Header = () => {
 
         {/* Menu Items */}
         <ul ref={menuRef} className={`absolute top-full left-0 h-screen bg-black w-4/5 sm:w-3/5 md:w-1/2 lg:w-1/3 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-500 ease-in-out pl-4 lg:pl-16`}>
-          <MenuItems isHeader={true} />
+          <MenuItems isHeader={true} setIsOpen={setIsOpen} />
         </ul>
 
         {/* User actions and icons */}
