@@ -3,82 +3,76 @@ import UploadSection from '../components/UploadSection';
 import Gallery from '../../client/components/Gallery';
 
 const GalleryUpload = () => {
-  // State to store the list of images
+  // State to store the list of images retrieved from the server
   const [images, setImages] = useState([]);
-
-  // State to store the selected image file for upload
+  
+  // State to store the currently selected image file for upload
   const [imageFile, setImageFile] = useState(null);
-
-  // State to store any error messages related to image upload or deletion
+  
+  // State to handle error messages
   const [error, setError] = useState('');
+  
+  // State to manage the upload process
+  const [isUploading, setIsUploading] = useState(false);
 
-  // Fetch initial gallery images from the server when the component mounts
+  // Fetch the initial list of images from the server when the component mounts
   useEffect(() => {
     fetch('/api/gallery-images')
       .then(response => response.json())
-      .then(data => setImages(data)) // Set the fetched images in state
+      .then(data => setImages(data)) // Store the fetched images in the state
       .catch(error => console.error('Error fetching gallery images:', error)); // Log any fetch errors
-  }, []); // Empty dependency array ensures this runs once on mount
+  }, []);
 
-  // Handle changes in the file input to select an image for upload
+  // Handle file selection for uploading an image
   const handleFileChange = (e) => {
-    const file = e.target.files[0]; // Get the first selected file
-    const validImageTypes = ['image/jpeg', 'image/png', 'image/gif']; // Allowed image types
-
-    // Check if the selected file is a valid image type
-    if (file && validImageTypes.includes(file.type)) {
-      setImageFile(file); // Set the valid file in state
-      setError(''); // Clear any previous error messages
-    } else {
-      // Set an error message for invalid file types
-      setError('Please select a valid image file (jpeg, png, gif).');
-      setImageFile(null); // Clear the file from state
-    }
+    const file = e.target.files[0]; // Get the selected file
+    setImageFile(file); // Set the selected file in the state
   };
 
-  // Handle the upload of the selected image file
+  // Handle the upload process of the selected image file
   const handleImageUpload = () => {
-    // Check if there's no file selected for upload
-    if (!imageFile) {
-      setError('No image selected for upload.');
-      return;
-    }
+    setIsUploading(true); // Indicate that the upload process has started
+    setError(''); // Clear any existing errors
 
     // Prepare the form data with the selected image file
     const formData = new FormData();
     formData.append('image', imageFile);
 
-    // Send a POST request to upload the image
-    fetch('/api/upload-image', {
+    // Send a POST request to the server to upload the image
+    return fetch('/api/upload-image', {
       method: 'POST',
       body: formData,
     })
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Error uploading image'); // Handle non-OK responses
+        }
+        return response.json(); // Parse the response data
+      })
       .then(data => {
-        // Add the newly uploaded image to the images state
-        setImages([...images, data]);
-        setImageFile(null); // Reset the image file state
-        setError(''); // Clear any error messages
+        setImages([...images, data.file]); // Add the newly uploaded image to the state
+        setImageFile(null); // Clear the selected image file
       })
       .catch(error => {
-        // Log and display error message if upload fails
-        console.error('Error uploading image:', error);
-        setError('Error uploading image.');
+        console.error('Error uploading image:', error); // Log any errors
+        setError('Error uploading image. Please try again.'); // Set error message for the user
+      })
+      .finally(() => {
+        setIsUploading(false); // Indicate that the upload process has finished
       });
   };
 
-  // Handle the deletion of an image by ID
+  // Handle the deletion of an image by its ID
   const handleImageDelete = (id) => {
     // Send a DELETE request to the server to remove the image
     fetch(`/api/delete-image/${id}`, { method: 'DELETE' })
       .then(() => {
-        // Remove the deleted image from the images state
-        setImages(images.filter(image => image.id !== id));
+        // Update the state to remove the deleted image
+        setImages(images.filter(image => image._id !== id));
       })
       .catch(error => {
-        // Log and display error message if deletion fails
-        console.error('Error deleting image:', error);
-        setError('Error deleting image.');
+        console.error('Error deleting image:', error); // Log any errors
+        setError('Error deleting image. Please try again.'); // Set error message for the user
       });
   };
 
