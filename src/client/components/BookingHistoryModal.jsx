@@ -1,167 +1,257 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import StatusBadge from '../../admin/components/StatusBadge';
-import { BookingContext } from '../context/BookingContext';
+import ServiceDropdown from '../components/ServiceDropdown';
 
-const BookingHistoryModal = ({ isOpen, onClose, customerId }) => {
-  const { bookings, setBookings } = useContext(BookingContext);
+const BookingForm = ({ isloggedIn }) => {
+  // State to manage modal visibility and booking confirmation status
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+    isBookingConfirmed: false,
+  });
 
+  // State to manage the form data
+  const [formData, setFormData] = useState({
+    fullName: '',
+    contactNumber: '',
+    service: '',
+    serviceInfo: '',
+  });
+
+  // Disable background scrolling when any modal is open
   useEffect(() => {
-    const fetchBookings = async () => {
-      try {
-        // Fetch data from API
-        const response = await fetch(`/api/customers/${customerId}/bookings`);
+    const isModalOpen = modalState.isOpen || modalState.isBookingConfirmed;
+    document.body.style.overflow = isModalOpen ? 'hidden' : '';
 
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-        const data = await response.json();
-        setBookings(data);
-      } catch (error) {
-        console.error('Error fetching bookings:', error);
-
-        // Fallback to hardcoded data if API fails
-        const fallbackData = [
-          { service: 'Full Body Spray', date: '19th August, 2024', status: 'Pending', invoiceNumber: 'INV001' },
-          { service: 'Full Body Spray', date: '19th August, 2024', status: 'Requested', invoiceNumber: 'INV002' },
-          { service: 'Full Body Spray', date: '18th August, 2024', status: 'Cancelled', invoiceNumber: 'INV003' },
-          { service: 'Full Body Spray', date: '17th August, 2024', status: 'Completed', invoiceNumber: 'INV004' },
-          { service: 'Full Body Spray', date: '16th August, 2024', status: 'Pending', invoiceNumber: 'INV005' },
-        ];
-        setBookings(fallbackData);
-      }
-    };
-
-    if (isOpen && customerId) {
-      fetchBookings();
-    }
-  }, [isOpen, customerId, setBookings]);
-
-  // Disable page scroll when the modal is open
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-
+    // Cleanup on component unmount or when modals close
     return () => {
       document.body.style.overflow = '';
     };
-  }, [isOpen]);
+  }, [modalState.isOpen, modalState.isBookingConfirmed]);
 
-  const updateBookingStatus = async (invoiceNumber, newStatus) => {
+  // Handler for form input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
+  // Validate contact number format
+  const isContactNumberValid = (contactNumber) => {
+    const phoneRegex = /^[0-9()+\- ]+$/;
+    const numericContactNumber = contactNumber.replace(/[^0-9]/g, '');
+    return (
+      phoneRegex.test(contactNumber) &&
+      numericContactNumber.length >= 10 &&
+      numericContactNumber.length <= 15
+    );
+  };
+
+  // Check if the form is valid
+  const isFormValid = () => {
+    return (
+      formData.fullName.trim() !== '' &&
+      isContactNumberValid(formData.contactNumber) &&
+      formData.service.trim() !== '' &&
+      formData.serviceInfo.trim() !== ''
+    );
+  };
+
+  // Open the confirmation modal
+  const handleOpenModal = (e) => {
+    e.preventDefault();
+    if (isFormValid()) {
+      setModalState({ ...modalState, isOpen: true });
+    }
+  };
+
+  // const [serviceIds, setServiceIds] = useState([]);
+  // const [selectedServiceId, setSelectedServiceId] = useState('');
+
+  // Fetch service IDs and set them in state
+  // useEffect(() => {
+  //   const fetchServiceIds = async () => {
+  //     try {
+  //       const response = await fetch('http://localhost:8080/api/services');
+  //       if (!response.ok) {
+  //         throw new Error('Network response was not ok');
+  //       }
+  //       const services = await response.json();
+  //       setServiceIds(services.map(service => service._id));
+  //       // setSelectedServiceId(services.filter(service => service.name === formData.service)._id);
+  //       // console.log(selectedServiceId);
+  //     } catch (error) {
+  //       console.error('Error fetching service IDs:', error);
+  //     }
+  //   };
+
+  //   fetchServiceIds();
+  // });
+
+  // Confirm booking and close the first modal
+  const handleConfirmBooking = async (event) => {
+    setModalState({ isOpen: false, isBookingConfirmed: true });
+    event.preventDefault();
+
+    const url = 'http://localhost:8080/api/booking';
+
+    const payload = {
+      contact: formData.contactNumber,
+      service: formData.service,
+      vehicleInfo: formData.serviceInfo,
+    };
+
     try {
-      const response = await fetch(`/api/customers/${customerId}/bookings/${invoiceNumber}`, {
-        method: 'PUT',
+      const response = await fetch(url, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
         },
-        body: JSON.stringify({ status: newStatus }),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update booking status');
+        const errorData = await response.json(); // Parse the error response
+        console.error('Response status:', response.status);
+        console.error('Response status text:', response.statusText);
+        console.error('Error details:', errorData);
+        throw new Error('Network response was not ok');
       }
 
-      setBookings((prevBookings) =>
-        prevBookings.map((booking) =>
-          booking.invoiceNumber === invoiceNumber ? { ...booking, status: newStatus } : booking
-        )
-      );
+      const data = await response.json();
+      
+      console.log('Success:', data); 
     } catch (error) {
-      console.error('Error updating booking status:', error);
-      alert('An error occurred while updating the booking status. Please try again.');
+      console.error('Error:', error);
+      alert('An error occurred while processing your request. Please try again later.');
     }
   };
 
-  const handleCancel = (invoiceNumber) => {
-    if (window.confirm('Are you sure you want to cancel this booking?')) {
-      updateBookingStatus(invoiceNumber, 'Cancelled');
-    }
+  // Close the first modal
+  const handleCloseModal = () => {
+    setModalState({ ...modalState, isOpen: false });
   };
 
-  const handleDelete = async (invoiceNumber) => {
-    if (window.confirm('Are you sure you want to delete this booking?')) {
-      try {
-        const response = await fetch(`/api/customers/${customerId}/bookings/${invoiceNumber}`, { method: 'DELETE' });
-
-        if (!response.ok) {
-          throw new Error('Failed to delete booking');
-        }
-
-        setBookings((prevBookings) =>
-          prevBookings.filter((booking) => booking.invoiceNumber !== invoiceNumber)
-        );
-      } catch (error) {
-        console.error('Error deleting booking:', error);
-        alert('An error occurred while deleting the booking. Please try again.');
-      }
-    }
+  // Close the booking confirmation modal
+  const handleCloseConfirmationModal = () => {
+    setModalState({ ...modalState, isBookingConfirmed: false });
   };
 
-  return (
+  // Reusable component to render input fields
+  const renderInputField = (label, type, name, placeholder) => (
+    <div className="flex-1">
+      <label className="block text-sm font-medium text-gray-700">{label}</label>
+      <input
+        type={type}
+        name={name}
+        value={formData[name]}
+        onChange={handleInputChange}
+        className="mt-1 block w-full border border-gray-300 p-3 rounded-md shadow-sm focus:outline focus:ring-green-500 sm:text-sm"
+        placeholder={placeholder}
+        required
+      />
+    </div>
+  );
+
+  // Reusable component to render modals
+  const renderModal = (isOpen, onRequestClose, title, content, actions) => (
     <Modal
       isOpen={isOpen}
-      onRequestClose={onClose}
-      contentLabel="Booking History"
-      className="relative w-full mx-[2px] max-w-lg max-h-[95%] bg-[#F9FAFC] text-black rounded-xl shadow-md p-5 md:p-7 md:mx-auto outline-none"
-      overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      onRequestClose={onRequestClose}
+      contentLabel={title}
+      className="bg-white p-8 mx-3 rounded-lg shadow-lg max-w-md md:mx-auto mt-20"
+      overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-20 flex justify-center items-center"
     >
-      <button
-        onClick={onClose}
-        className="absolute top-2 right-5 text-gray-600 text-2xl"
-      >
-        &times;
-      </button>
-      <h2 className="text-center text-xl md:text-2xl font-semibold mb-4">Booking History</h2>
-      <div className="bg-white w-full border border-[#E8E9ED] rounded-xl p-4">
-        <div className="flex justify-between border-b bg-[#F5F6F8] p-3">
-          <div>Service</div>
-          <div className="hidden md:block">Date</div>
-          <div>Status</div>
-        </div>
-        <div className="px-4 overflow-y-auto max-h-[500px]">
-          {bookings.length === 0 ? (
-            <div className="text-center p-4 text-gray-600">
-              No services booked.
-            </div>
-          ) : (
-            bookings.map((booking, index) => (
-              <div key={index} className="border-b">
-                <div className="flex justify-between text-sm md:text-base pt-2 items-center">
-                  <div className="block md:flex md:gap-6 p-1 md:p-0">
-                    <div className="md:p-1">{booking.service}</div>
-                    <div className="text-gray-400 md:text-black md:p-1">{booking.date}</div>
-                  </div>
-                  <div className="p-1 text-right">
-                    <StatusBadge status={booking.status} />
-                  </div>
-                </div>
-
-                <button
-                  className={`bg-[rgba(110,119,134,0.2)] text-[#6E7786] p-1 md:p-[6px] my-3 w-full rounded-lg ${
-                    booking.status === 'Pending'
-                      ? 'cursor-not-allowed'
-                      : 'hover:bg-[#d04343] active:bg-[#DE0000] hover:text-white active:text-white'
-                  }`}
-                  disabled={booking.status === 'Pending'}
-                  onClick={() =>
-                    booking.status === 'Requested'
-                      ? handleCancel(booking.invoiceNumber)
-                      : handleDelete(booking.invoiceNumber)
-                  }
-                >
-                  {booking.status === 'Requested' ? 'Cancel' : 'Delete'}
-                </button>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
+      <h2 className="text-2xl font-semibold mb-4">{title}</h2>
+      <p className="mb-5">{content}</p>
+      <div className="flex justify-end space-x-4">{actions}</div>
     </Modal>
+  );
+
+  return (
+    <div className="max-w-2xl mx-auto p-4">
+      <h1 className="text-3xl font-bold text-center mb-4">AutoService</h1>
+      <form className="space-y-4">
+        {renderInputField('Full Name', 'text', 'fullName', 'Your Name')}
+        {renderInputField('Contact Number', 'tel', 'contactNumber', 'Contact Number')}
+
+        <div className="flex-1">
+          <label className="block text-gray-700 text-sm font-medium mb-2" htmlFor="service">
+            Service
+          </label>
+          <ServiceDropdown 
+            formData={formData} 
+            handleInputChange={handleInputChange} 
+          />
+        </div>
+
+        <div className="flex-1">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            How can we help?
+          </label>
+          <textarea
+            className="appearance-none border rounded-lg w-full p-3 border-gray-300 text-gray-700 leading-tight focus:outline focus:shadow-outline"
+            name="serviceInfo"
+            value={formData.serviceInfo}
+            onChange={handleInputChange}
+            placeholder="Tell us a little about the request..."
+            rows="4"
+            required
+          ></textarea>
+        </div>
+
+        <button
+          onClick={handleOpenModal}
+          className={`${
+            isFormValid()
+              ? 'hover:bg-red-600 text-red-700 bg-white hover:text-white border-red-300'
+              : 'bg-gray-200 text-gray-500 cursor-not-allowed border-gray-300'
+          } border px-5 py-2 rounded-lg w-full`}
+          disabled={!isFormValid()}
+        >
+          Confirm Booking
+        </button>
+      </form>
+
+      {/* Modal to confirm booking */}
+      {renderModal(
+        modalState.isOpen,
+        handleCloseModal,
+        'Confirm Your Booking',
+        'Are you sure you want to confirm the booking?',
+        <>
+          <button
+            onClick={handleConfirmBooking}
+            className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"
+          >
+            Yes, Confirm
+          </button>
+          <button
+            onClick={handleCloseModal}
+            className="bg-gray-300 py-2 px-4 rounded-lg hover:bg-gray-400"
+          >
+            Cancel
+          </button>
+        </>
+      )}
+
+      {/* Modal to display booking confirmation */}
+      {renderModal(
+        modalState.isBookingConfirmed,
+        handleCloseConfirmationModal,
+        'Booking Confirmed',
+        'Your booking has been successfully confirmed. Thank you!',
+        <button
+          onClick={handleCloseConfirmationModal}
+          className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"
+        >
+          Close
+        </button>
+      )}
+    </div>
   );
 };
 
-export default BookingHistoryModal;
+export default BookingForm;
