@@ -6,9 +6,9 @@ function ServiceDropdown({ formData, handleInputChange }) {
 
   // Fetch the services data when the component mounts
   useEffect(() => {
-    fetch('http://localhost:8080/api/services')
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/services`) //'http://localhost:8080/api/services'
       .then(response => {
-        if (!response.ok) {
+         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         return response.json();

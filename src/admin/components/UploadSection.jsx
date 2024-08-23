@@ -1,59 +1,81 @@
 import { Icon } from '@iconify/react/dist/iconify.js';
 import React, { useState } from 'react';
-import galleryData from '../../client/data/gallery'; // Import your gallery data
 
-const UploadSection = () => {
-  const [files, setFiles] = useState([]);
-  const [previewUrls, setPreviewUrls] = useState([]);
-  const [error, setError] = useState('');
-  const [gallery, setGallery] = useState(galleryData); // State for gallery images
-  const maxFileSizeMB = 5;
+const UploadSection = ({ onImageUpload }) => {
+  const [files, setFiles] = useState([]); // State to store selected files
+  const [previewUrls, setPreviewUrls] = useState([]); // State to store preview URLs for selected images
+  const [error, setError] = useState(''); // State to store any errors during the upload process
+  const [uploadStatus, setUploadStatus] = useState({}); // State to track upload status for each file
+  const maxFileSizeMB = 5; // Maximum allowed file size
 
   // Handle file selection and validation
   const handleFileUpload = (event) => {
-    const selectedFiles = Array.from(event.target.files);
-    const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    const selectedFiles = Array.from(event.target.files); // Convert FileList to an array
+    const validImageTypes = ['image/jpeg', 'image/png', 'image/gif']; // Valid image MIME types
 
+    // Filter valid files by type and size
     const validFiles = selectedFiles.filter(file =>
       validImageTypes.includes(file.type) && file.size / 1024 / 1024 <= maxFileSizeMB
     );
 
+    // Set error message if any files are invalid or too large
     if (validFiles.length !== selectedFiles.length) {
       setError('Some files were not added because they are invalid or exceed the size limit.');
     } else {
-      setError('');
+      setError(''); // Clear error if all files are valid
     }
 
-    // Set files and preview URLs for display
+    // Update state with valid files and their preview URLs
     setFiles([...files, ...validFiles]);
     const newPreviewUrls = validFiles.map(file => URL.createObjectURL(file));
     setPreviewUrls([...previewUrls, ...newPreviewUrls]);
 
-    // Simulate uploading to the backend and getting new image URLs
+    // Initialize upload status and start the upload process
     validFiles.forEach(file => {
-      uploadImage(file).then(newImageUrl => {
-        setGallery([...gallery, { id: Date.now(), name: file.name, size: file.size, src: newImageUrl }]);
-      }).catch(() => {
-        setError('Error uploading image.');
-      });
+      setUploadStatus(prevStatus => ({ ...prevStatus, [file.name]: 'Uploading' }));
+
+      // Upload image to the server
+      uploadImage(file)
+        .then(newImageUrl => {
+          setUploadStatus(prevStatus => ({ ...prevStatus, [file.name]: 'Completed' })); // Set status to "Completed"
+          onImageUpload(newImageUrl); // Trigger callback to update the gallery with the new image
+        })
+        .catch(() => {
+          setError('Error uploading image.');
+          setUploadStatus(prevStatus => ({ ...prevStatus, [file.name]: 'Failed' })); // Handle upload failure
+        });
     });
   };
 
-  // Simulate image upload to a backend service
+  // Upload image to the backend server
   const uploadImage = async (imageFile) => {
-    // Replace this with actual upload logic, e.g., a POST request to a server
-    // Here we're just simulating with a local URL
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(URL.createObjectURL(imageFile));
-      }, 1000);
+    const formData = new FormData();
+    formData.append('image', imageFile);
+
+    const response = await fetch('/api/upload-image', {
+      method: 'POST',
+      body: formData,
     });
+
+    if (!response.ok) {
+      throw new Error('Upload failed');
+    }
+
+    const data = await response.json();
+    return data.fileUrl; // Return the URL of the uploaded image
   };
 
   // Handle file removal
   const handleFileRemove = (index) => {
+    const fileName = files[index].name;
+    // Update state to remove the selected file
     setFiles(files.filter((_, i) => i !== index));
     setPreviewUrls(previewUrls.filter((_, i) => i !== index));
+    setUploadStatus(prevStatus => {
+      const newStatus = { ...prevStatus };
+      delete newStatus[fileName];
+      return newStatus;
+    });
   };
 
   return (
@@ -66,7 +88,7 @@ const UploadSection = () => {
           <input
             type="file"
             multiple
-            onChange={handleFileUpload}
+            onChange={handleFileUpload} // Handle file selection and validation
             accept="image/png, image/jpeg, image/gif"
             className="hidden"
             id="fileUpload"
@@ -99,25 +121,29 @@ const UploadSection = () => {
         </div>
       </div>
 
-      {/* Error message */}
-      {error && (
+      {/* Display error message if any */}
+      {/* {error && (
         <div className="mt-4 text-red-600">
           {error}
         </div>
-      )}
+      )} */}
 
-      {/* File details display */}
+      {/* Display list of selected files with their details */}
       {files.length > 0 && (
         <div className="mt-4">
           <div className='mb-3'>Files</div>
-          <div className='flex gap-3'>
+          <div className='flex flex-col lg:flex-row gap-3 bg-red300 lg:max-w-[1000px] max-h-96 overflow-y-auto lg:overflow-x-auto'>
             {files.map((file, index) => (
-              <div key={index} className="relative w-full sm:w-64 py-2 px-3 mb-2 border-2 border-[#f0f0f1] text-[#6E7786] rounded-lg">
-                <div>{file.name}</div>
-                <div className='flex text-sm mt-1'>
-                  <span>{(file.size / 1024 / 1024).toFixed(2)} MB</span>
-                  <span className='ml-2 text-[#08C352]'>Completed</span>
+              <div key={index} className="relative w-ful sm:w-64 max-h-[246px] py-2 px-3 mb-2 border-2 border-[#f0f0f1] text-[#6E7786] rounded-lg">
+                <div className='mr-8 truncate'>{file.name}</div>
+                <div className='flex items-center text-sm mt-1'>
+                  <span className='flex'>{(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                  <div className={`h-[0.45rem] w-[0.45rem] rounded-full ml-2 mt-1 ${uploadStatus[file.name] === 'Completed' ? 'bg-green-400' : uploadStatus[file.name] === 'Failed' ? 'text-red-600' : 'text-gray-500'}`}></div>
+                  <span className={`ml-1 ${uploadStatus[file.name] === 'Completed' ? 'text-green-500' : uploadStatus[file.name] === 'Failed' ? 'text-red-600' : 'text-gray-500'}`}>
+                    {uploadStatus[file.name]}
+                  </span>
                 </div>
+                {/* Remove file from the list */}
                 <Icon
                   icon='ic:round-close'
                   className='absolute top-2 right-2 h-5 w-5 text-[#B3B4B5] cursor-pointer'

@@ -9,6 +9,7 @@ import { Icon } from '@iconify/react';
 import menuItems from '../data/menuItems';
 import LogoutButton from './LogoutButton';
 import ResetPasswordButton from './ResetPasswordButton';
+import MenuItems from './MenuItems';
 
 const Header = () => {
   // State management
@@ -101,16 +102,7 @@ const Header = () => {
 
         {/* Menu Items */}
         <ul ref={menuRef} className={`absolute top-full left-0 h-screen bg-black w-4/5 sm:w-3/5 md:w-1/2 lg:w-1/3 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-500 ease-in-out pl-4 lg:pl-16`}>
-          {menuItems.map((item, index) => (
-            <li key={index}>
-              <NavLink
-                to={item.path}
-                className={({ isActive }) => `hover:text-red-700 block w-fit py-2 md:py-3 lg:py-4 px-4 md:px-0 transition-colors duration-300 ${isActive ? 'text-red-700 font-bold' : ''}`}
-              >
-                {item.label}
-              </NavLink>
-            </li>
-          ))}
+          <MenuItems isHeader={true} setIsOpen={setIsOpen} />
         </ul>
 
         {/* User actions and icons */}
