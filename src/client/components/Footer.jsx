@@ -7,6 +7,7 @@ import phoneIcon from '../assets/phone.png';
 import ContactInfo from './ContactInfo';
 import SocialIcons from './SocialIcons';
 import menuItems from '../data/menuItems';
+import MenuItems from './MenuItems';
 
 // Footer component displays the footer section of the website
 const Footer = () => {
@@ -48,18 +49,14 @@ const Footer = () => {
             {/* Useful Links section */}
             <div className="mb-8 md:mb-0">
               <h3 className="font-bold mb-4">Useful Links</h3>
-              <ul>
-                {menuItems.map((item, index)=> (
-                  <li key={index} className='mb-1'><Link to={item.path}>{item.label}</Link></li>
-                ))}
-              </ul>
+              <MenuItems/>
             </div>
             {/* Our Services section */}
             <div className="mb-8 md:mb-0">
               <h3 className="font-bold mb-4">Our Services</h3>
               <ul>
                 {services.map(service => (
-                  <li key={service.title} className='mb-1'><Link to={`/services#${service.path}`}>{service.title}</Link></li>
+                  <li key={service.title} className='mb-1'><Link to={`/services#${service.path}`} className='hover:text-[#DE0000] transition duration-300'>{service.title}</Link></li>
                 ))}
               </ul>
             </div>

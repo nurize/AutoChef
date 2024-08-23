@@ -14,22 +14,15 @@ const ServicesHomeSection = ({ image }) => {
             <Link
               to={`/services#${service.path}`}
               key={service.title}
-              className="relative group bg-white p-6 rounded-lg border border-gray-300 overflow-hidden"
+              className="relative hover:outline outline-red-60 bg-white p-6 rounded-lg border border-gray-300 overflow-hidden  hover:scale-105 transition duration-300"
             >
-              {/* Hover Background Image */}
-              <div
-                className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-0 group-hover:opacity-100 transition duration-100"
-                style={{
-                  backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${service.image})`,
-                }}
-              ></div>
               {/* Content */}
               <div className="relative z-10">
-                <h3 className="text-2xl font-semibold mb-4 pt-10 text-black group-hover:text-white ">
+                <h3 className="text-2xl font-semibold mb-4 pt-10 text-black">
                   {service.title}
                 </h3>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-end text-[#DE0000] group-hover:text-white ">
+                  <div className="flex items-end text-[#DE0000]">
                     <span>Book now</span>
                     <Icon
                       icon="flowbite:arrow-right-outline"
@@ -39,7 +32,7 @@ const ServicesHomeSection = ({ image }) => {
                   <Icon
                     icon={service.icon}
                     alt="service icon"
-                    className="h-20 w-20 text-[#DE0000] group-hover:text-white "
+                    className="h-20 w-20 text-[#DE0000] "
                   />
                 </div>
               </div>
